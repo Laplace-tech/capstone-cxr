@@ -1,0 +1,43 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node
+node_modules/
+dist/
+build/
+
+# Java / Gradle
+.gradle/
+build/
+out/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Env
+.env
+.env.*
+
+# AI artifacts
+apps/ai-service/artifacts/
+apps/ai-service/**/*.pt
+apps/ai-service/**/*.pth
+apps/ai-service/**/*.ckpt
+apps/ai-service/**/*.onnx
+
+# Runtime shared files
+shared/uploads/*
+shared/generated/*
+
+# Keep folders
+!shared/uploads/.gitkeep
+!shared/generated/.gitkeep
