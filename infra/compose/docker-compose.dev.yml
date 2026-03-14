@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  frontend:
+    build:
+      context: ../../apps/frontend
+      dockerfile: ../../infra/docker/frontend.Dockerfile
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ../../apps/backend
+      dockerfile: ../../infra/docker/backend.Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      AI_SERVICE_BASE_URL: http://ai-service:8000
+    depends_on:
+      - ai-service
+      - postgres
+
+  ai-service:
+    build:
+      context: ../../apps/ai-service
+      dockerfile: ../../infra/docker/ai-service.Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../../shared:/shared
+      - ../../apps/ai-service/artifacts:/app/artifacts
+
+  postgres:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: cxrdb
+      POSTGRES_USER: cxruser
+      POSTGRES_PASSWORD: cxrpass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
