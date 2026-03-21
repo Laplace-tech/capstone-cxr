@@ -62,6 +62,7 @@ apps/ai-service/artifacts/cams/*
 
 apps/ai-service/artifacts/checkpoints/*
 !apps/ai-service/artifacts/checkpoints/.gitkeep
+!apps/ai-service/artifacts/checkpoints/*.json
 
 apps/ai-service/artifacts/logs/*
 !apps/ai-service/artifacts/logs/.gitkeep
