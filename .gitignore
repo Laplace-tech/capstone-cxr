@@ -9,10 +9,10 @@ Thumbs.db
 # =========================
 # Node / frontend
 # =========================
-node_modules/
-dist/
-build/
-coverage/
+apps/frontend/node_modules/
+apps/frontend/dist/
+apps/frontend/build/
+apps/frontend/coverage/
 *.tsbuildinfo
 npm-debug.log*
 yarn-debug.log*
@@ -22,13 +22,13 @@ pnpm-debug.log*
 # =========================
 # Java / Gradle / backend
 # =========================
-.gradle/
-build/
-out/
+apps/backend/.gradle/
+apps/backend/build/
+apps/backend/out/
 *.class
 
 # =========================
-# Python / ai-service
+# Python
 # =========================
 __pycache__/
 *.py[cod]
@@ -45,34 +45,22 @@ venv/
 .env
 .env.*
 *.env
+!.env.example
+!**/.env.example
 
 # =========================
 # AI artifacts / model files
 # =========================
+# artifacts 아래에서는 checkpoints 폴더만 구조상 유지
 apps/ai-service/artifacts/*
-!apps/ai-service/artifacts/.gitkeep
-!apps/ai-service/artifacts/cams/
 !apps/ai-service/artifacts/checkpoints/
-!apps/ai-service/artifacts/logs/
-!apps/ai-service/artifacts/predictions/
-!apps/ai-service/artifacts/reports/
 
-apps/ai-service/artifacts/cams/*
-!apps/ai-service/artifacts/cams/.gitkeep
-
+# checkpoints 안에서는 json 메타데이터만 추적
 apps/ai-service/artifacts/checkpoints/*
 !apps/ai-service/artifacts/checkpoints/.gitkeep
 !apps/ai-service/artifacts/checkpoints/*.json
 
-apps/ai-service/artifacts/logs/*
-!apps/ai-service/artifacts/logs/.gitkeep
-
-apps/ai-service/artifacts/predictions/*
-!apps/ai-service/artifacts/predictions/.gitkeep
-
-apps/ai-service/artifacts/reports/*
-!apps/ai-service/artifacts/reports/.gitkeep
-
+# 모델 바이너리 파일은 항상 무시
 apps/ai-service/**/*.pt
 apps/ai-service/**/*.pth
 apps/ai-service/**/*.ckpt
