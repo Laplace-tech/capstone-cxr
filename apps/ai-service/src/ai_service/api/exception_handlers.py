@@ -10,13 +10,19 @@ from fastapi.responses import JSONResponse
 
 from ai_service.common.exceptions import AppError, InternalServerError
 
-# 서버 로그용 로거
 logger = logging.getLogger(__name__)
 
 
 def register_exception_handlers(app: FastAPI) -> None:
-    
-    # raise 로 발생시킨 AppError 계열 예외 처리
+    """
+    앱 전역 예외 처리기를 등록한다.
+
+    처리 대상:
+    - AppError 계열
+    - FastAPI/Pydantic 요청 검증 실패
+    - 그 외 모든 미처리 예외
+    """
+
     @app.exception_handler(AppError)
     async def handle_app_error(request: Request, exc: AppError) -> JSONResponse:
         analysis_id = await _extract_analysis_id(request)
@@ -28,8 +34,6 @@ def register_exception_handlers(app: FastAPI) -> None:
             analysis_id=analysis_id,
         )
 
-    # FastAPI/Pydantic 레벨 요청 검증 실패 처리
-    # ex: 필수 필드 누락, 타입 불일치 등
     @app.exception_handler(RequestValidationError)
     async def handle_request_validation_error(
         request: Request,
@@ -46,8 +50,6 @@ def register_exception_handlers(app: FastAPI) -> None:
             analysis_id=analysis_id,
         )
 
-    # 위에서 처리하지 못한 모든 예외를 마지막에 잡는다.
-    # 내부 구현 정보는 숨기고, 공통 500 응답만 내려준다.
     @app.exception_handler(Exception)
     async def handle_unexpected_exception(
         request: Request,
@@ -66,7 +68,6 @@ def register_exception_handlers(app: FastAPI) -> None:
         )
 
 
-# 에러 응답 포맷을 한 군데서만 만들게 분리
 def _build_error_response(
     *,
     status_code: int,
@@ -74,7 +75,9 @@ def _build_error_response(
     message: str,
     analysis_id: str | None,
 ) -> JSONResponse:
-    
+    """
+    서비스 공통 실패 응답 포맷을 생성한다.
+    """
     return JSONResponse(
         status_code=status_code,
         content={
@@ -88,25 +91,25 @@ def _build_error_response(
     )
 
 
-# 요청 body에서 analysis_id를 꺼내는 헬퍼
 async def _extract_analysis_id(request: Request) -> str | None:
+    """
+    요청 body에서 analysis_id를 추출한다.
 
+    실패해도 예외를 내지 않고 None을 반환한다.
+    이유:
+    - 예외 처리기 안에서는 추가 실패를 만들면 안 되기 때문
+    """
     try:
         body: Any = await request.json()
     except Exception:
-        # JSON 파싱 자체가 안 되면 analysis_id 추출 불가
         return None
 
-    # body가 dict(JSON object)가 아니면 사용 불가
     if not isinstance(body, dict):
         return None
 
     raw_analysis_id = body.get("analysis_id")
-
-    # analysis_id는 문자열만 허용
     if not isinstance(raw_analysis_id, str):
         return None
 
-    # 공백만 들어온 경우는 None 처리
     normalized_analysis_id = raw_analysis_id.strip()
     return normalized_analysis_id or None

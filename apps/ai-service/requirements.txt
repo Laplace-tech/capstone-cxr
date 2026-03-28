@@ -1,4 +1,9 @@
 fastapi
 uvicorn[standard]
-python-multipart
 pydantic
+python-multipart
+torch
+torchvision
+pillow
+numpy
+matplotlib

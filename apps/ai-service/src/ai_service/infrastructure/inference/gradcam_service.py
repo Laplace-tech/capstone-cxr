@@ -8,14 +8,14 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from PIL import Image, UnidentifiedImageError
+from matplotlib import colormaps
 
 from ai_service.common.exceptions import InternalServerError, NotFoundError
 from ai_service.infrastructure.settings import Settings, get_settings
 
-
 _GRADCAM_OUTPUT_FILENAME = "gradcam_overlay.png"
 _GRADCAM_OVERLAY_ALPHA = 0.45
-
+_TURBO_COLORMAP_NAME = "turbo"
 
 def generate_gradcam_overlay(
     *,
@@ -29,6 +29,15 @@ def generate_gradcam_overlay(
     """
     실제 Grad-CAM overlay를 생성하고,
     shared/generated 기준 상대경로를 반환한다.
+
+    처리 순서:
+    1) 입력 원본 이미지 로드
+    2) Grad-CAM 대상 layer 선택
+    3) hook 등록
+    4) forward / backward 수행
+    5) heatmap 생성
+    6) 원본 이미지 위에 overlay 생성
+    7) shared/generated 아래에 PNG 저장
     """
     cfg = settings or get_settings()
     resolved_image_path = _resolve_input_image_path(image_path)
@@ -37,10 +46,13 @@ def generate_gradcam_overlay(
     activations: list[torch.Tensor] = []
     gradients: list[torch.Tensor] = []
 
-    # [FIX] PyTorch Autograd 충돌 방지: 모델 내부의 모든 inplace 연산을 비활성화
-    for module in model.modules():
-        if hasattr(module, 'inplace'):
-            module.inplace = False
+    # Grad-CAM backward/hook 계산 중 autograd 충돌을 줄이기 위해
+    # inplace 연산을 사용하는 모듈의 inplace 옵션을 비활성화한다.
+    #
+    # 주의:
+    # - 현재 구현은 모델 객체를 직접 수정한다.
+    # - 서비스 프로세스 생애주기 동안 이 변경은 유지된다.
+    _disable_inplace_ops(model)
 
     target_layer = _resolve_target_layer(model)
     handles = _register_gradcam_hooks(
@@ -51,6 +63,7 @@ def generate_gradcam_overlay(
 
     try:
         model.zero_grad(set_to_none=True)
+
         logits = model(image_tensor)
         target_score = _resolve_target_score(
             logits=logits,
@@ -70,19 +83,20 @@ def generate_gradcam_overlay(
             heatmap=heatmap,
         )
 
-        relative_output_path = Path("analyses") / analysis_id / _GRADCAM_OUTPUT_FILENAME
-        absolute_output_path = cfg.shared_generated_dir / relative_output_path
-        absolute_output_path.parent.mkdir(parents=True, exist_ok=True)
-        overlay_image.save(absolute_output_path)
-
-        return relative_output_path.as_posix()
+        return _save_overlay_image(
+            analysis_id=analysis_id,
+            overlay_image=overlay_image,
+            settings=cfg,
+        )
     finally:
-        for handle in handles:
-            handle.remove()
+        _remove_hooks(handles)
         model.zero_grad(set_to_none=True)
 
 
 def _resolve_input_image_path(image_path: str | Path) -> Path:
+    """
+    입력 이미지 경로가 실제 존재하는 일반 파일인지 확인한다.
+    """
     path = Path(image_path)
 
     if not path.exists() or not path.is_file():
@@ -95,6 +109,9 @@ def _resolve_input_image_path(image_path: str | Path) -> Path:
 
 
 def _load_original_rgb_image(image_path: Path) -> Image.Image:
+    """
+    원본 이미지를 열고 RGB 3채널 이미지로 변환한다.
+    """
     try:
         with Image.open(image_path) as image:
             return image.convert("RGB")
@@ -109,7 +126,25 @@ def _load_original_rgb_image(image_path: Path) -> Image.Image:
             message=f"Failed to read image file: {image_path.name}",
         ) from exc
 
+
+def _disable_inplace_ops(model: nn.Module) -> None:
+    """
+    Grad-CAM 계산 시 hook/autograd 충돌을 줄이기 위해
+    모델 내부의 inplace 연산 옵션을 비활성화한다.
+    """
+    for module in model.modules():
+        if hasattr(module, "inplace"):
+            module.inplace = False
+
+
 def _resolve_target_layer(model: nn.Module) -> nn.Module:
+    """
+    Grad-CAM 대상 layer를 결정한다.
+
+    현재 DenseNet121 기준:
+    - 우선순위 1: model.features.denseblock4
+    - fallback   : model.features
+    """
     if hasattr(model, "features") and hasattr(model.features, "denseblock4"):
         return model.features.denseblock4
 
@@ -128,9 +163,19 @@ def _register_gradcam_hooks(
     activations: list[torch.Tensor],
     gradients: list[torch.Tensor],
 ) -> tuple[torch.utils.hooks.RemovableHandle, torch.utils.hooks.RemovableHandle]:
-    def forward_hook(_: nn.Module, __: tuple[torch.Tensor, ...], output: torch.Tensor) -> None:
+    """
+    Grad-CAM에 필요한 forward / backward hook을 등록한다.
+
+    - forward hook  : activation 저장
+    - backward hook : gradient 저장
+    """
+    def forward_hook(
+        _: nn.Module,
+        __: tuple[torch.Tensor, ...],
+        output: torch.Tensor,
+    ) -> None:
         activations.clear()
-        activations.append(output.clone().detach())
+        activations.append(output.detach().clone())
 
     def backward_hook(
         _: nn.Module,
@@ -140,18 +185,35 @@ def _register_gradcam_hooks(
         gradients.clear()
         first_grad = grad_output[0]
         if first_grad is not None:
-            gradients.append(first_grad.clone().detach())
+            gradients.append(first_grad.detach().clone())
 
     forward_handle = target_layer.register_forward_hook(forward_hook)
     backward_handle = target_layer.register_full_backward_hook(backward_hook)
 
     return forward_handle, backward_handle
 
+
+def _remove_hooks(
+    handles: tuple[
+        torch.utils.hooks.RemovableHandle,
+        torch.utils.hooks.RemovableHandle,
+    ],
+) -> None:
+    """
+    등록한 hook을 반드시 제거한다.
+    """
+    for handle in handles:
+        handle.remove()
+
+
 def _resolve_target_score(
     *,
     logits: torch.Tensor,
     target_label_index: int,
 ) -> torch.Tensor:
+    """
+    logits에서 Grad-CAM backward 대상 score를 꺼낸다.
+    """
     if not isinstance(logits, torch.Tensor):
         raise InternalServerError(
             code="LOGITS_INVALID",
@@ -183,6 +245,15 @@ def _build_gradcam_heatmap(
     target_height: int,
     target_width: int,
 ) -> np.ndarray:
+    """
+    activation / gradient를 이용해 Grad-CAM heatmap을 만든다.
+    """
+    if target_height <= 0 or target_width <= 0:
+        raise InternalServerError(
+            code="GRADCAM_TARGET_SIZE_INVALID",
+            message="Grad-CAM target size must be positive.",
+        )
+
     if not activations or not gradients:
         raise InternalServerError(
             code="GRADCAM_HOOK_DATA_MISSING",
@@ -198,10 +269,14 @@ def _build_gradcam_heatmap(
             message="Grad-CAM activation/gradient tensors must be 4D.",
         )
 
+    # channel-wise importance weight 계산
     weights = gradient.mean(dim=(2, 3), keepdim=True)
+
+    # weighted sum -> ReLU
     cam = (weights * activation).sum(dim=1, keepdim=True)
     cam = F.relu(cam)
 
+    # 원본 이미지 크기로 upsampling
     cam = F.interpolate(
         cam,
         size=(target_height, target_width),
@@ -214,6 +289,7 @@ def _build_gradcam_heatmap(
     cam_min = float(cam.min())
     cam_max = float(cam.max())
 
+    # activation이 전부 같은 값이면 heatmap 정보가 없으므로 0 배열 반환
     if cam_max <= cam_min:
         return np.zeros((target_height, target_width), dtype=np.float32)
 
@@ -226,6 +302,9 @@ def _build_overlay_image(
     original_image: Image.Image,
     heatmap: np.ndarray,
 ) -> Image.Image:
+    """
+    원본 RGB 이미지와 heatmap을 섞어 overlay 이미지를 만든다.
+    """
     original_np = np.asarray(original_image).astype(np.float32) / 255.0
     heatmap_rgb = _apply_simple_colormap(heatmap)
 
@@ -236,12 +315,46 @@ def _build_overlay_image(
     return Image.fromarray(overlay_np)
 
 
+def _save_overlay_image(
+    *,
+    analysis_id: str,
+    overlay_image: Image.Image,
+    settings: Settings,
+) -> str:
+    """
+    overlay 이미지를 shared/generated 아래에 저장하고,
+    상대경로 문자열을 반환한다.
+    """
+    relative_output_path = Path("analyses") / analysis_id / _GRADCAM_OUTPUT_FILENAME
+    absolute_output_path = settings.shared_generated_dir / relative_output_path
+
+    try:
+        absolute_output_path.parent.mkdir(parents=True, exist_ok=True)
+        overlay_image.save(absolute_output_path)
+    except OSError as exc:
+        raise InternalServerError(
+            code="GRADCAM_SAVE_FAILED",
+            message=f"Failed to save Grad-CAM overlay: {absolute_output_path.name}",
+        ) from exc
+
+    return relative_output_path.as_posix()
+
+
+# apps/ai-service/src/ai_service/infrastructure/inference/gradcam_service.py
 def _apply_simple_colormap(heatmap: np.ndarray) -> np.ndarray:
     """
-    matplotlib 없이 간단한 warm colormap을 만든다.
-    """
-    red = np.clip(1.5 * heatmap, 0.0, 1.0)
-    green = np.clip(1.5 * heatmap - 0.5, 0.0, 1.0)
-    blue = np.clip(1.5 * heatmap - 1.0, 0.0, 1.0)
+    matplotlib turbo colormap을 적용해 RGB heatmap을 만든다.
 
-    return np.stack([red, green, blue], axis=-1).astype(np.float32)
+    입력:
+    - heatmap: [H, W], 값 범위 [0, 1] 기대
+
+    출력:
+    - [H, W, 3] float32 RGB 배열, 값 범위 [0, 1]
+    """
+    clipped_heatmap = np.clip(heatmap, 0.0, 1.0)
+
+    # matplotlib colormap 결과는 RGBA이므로 RGB만 사용
+    turbo_rgba = colormaps[_TURBO_COLORMAP_NAME](clipped_heatmap)
+    turbo_rgb = turbo_rgba[..., :3]
+
+    return turbo_rgb.astype(np.float32)
