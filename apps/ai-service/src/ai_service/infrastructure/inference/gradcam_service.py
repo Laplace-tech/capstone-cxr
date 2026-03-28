@@ -14,7 +14,7 @@ from ai_service.common.exceptions import InternalServerError, NotFoundError
 from ai_service.infrastructure.settings import Settings, get_settings
 
 _GRADCAM_OUTPUT_FILENAME = "gradcam_overlay.png"
-_GRADCAM_OVERLAY_ALPHA = 0.45
+_GRADCAM_OVERLAY_ALPHA = 0.65
 _TURBO_COLORMAP_NAME = "turbo"
 
 def generate_gradcam_overlay(
