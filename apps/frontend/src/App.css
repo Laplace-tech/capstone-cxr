@@ -232,3 +232,89 @@ body {
     flex-direction: column;
   }
 }
+
+.history-section {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.history-list {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.history-card {
+  background: #f9fafb;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.history-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-date {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 8px 0;
+}
+
+.history-labels {
+  font-size: 14px;
+  color: #374151;
+}
+
+.tab-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.tab-buttons button {
+  border: none;
+  background: transparent;
+  color: #1f2937;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tab-buttons button.active {
+  background: #1d4f91;
+  color: white;
+}
+
+.selected-id-text {
+  margin-top: 8px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.probability-bar {
+  width: 100%;
+  height: 10px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+.probability-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.probability-fill.positive {
+  background: #ef4444;
+}
+
+.probability-fill.negative {
+  background: #60a5fa;
+}
