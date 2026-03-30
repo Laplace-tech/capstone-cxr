@@ -1,43 +1,37 @@
 function DetailResultList({ details = [] }) {
     return (
-        <section className="detail-card">
-        <h2>질환별 상세 결과</h2>
+        <section className="result-card">
+        <h3>질환별 상세 결과</h3>
 
-        <div className="detail-list">
-            {details.length === 0 ? (
-            <p className="empty-text">상세 결과가 없습니다.</p>
-            ) : (
-            details.map((item, index) => (
-                <div key={`${item.name}-${index}`} className="detail-item">
-                <div className="detail-top">
-                    <h3>{item.name}</h3>
-                    <span
-                    className={`result-badge ${
-                        item.result === "POSITIVE" ? "positive" : "negative"
-                    }`}
-                    >
+        <div className="result-list">
+            {details.map((item) => {
+            const isPositive = item.result === "POSITIVE";
+
+            return (
+                <div className="result-row" key={item.name}>
+                <div className="result-name">{item.name}</div>
+
+                <div className="result-bar-area">
+                    <div className="result-bar-bg">
+                    <div
+                        className={`result-bar-fill ${isPositive ? "positive" : "negative"}`}
+                        style={{ width: `${item.probability}%` }}
+                    />
+                    </div>
+                </div>
+
+                <div className="result-meta">
+                    <span className="result-prob">{item.probability.toFixed(1)}%</span>
+                    <span className={`result-badge ${isPositive ? "positive" : "negative"}`}>
                     {item.result}
                     </span>
                 </div>
-
-                <div className="detail-meta">
-                    <span>확률: {item.probability}%</span>
                 </div>
-
-                <div className="probability-bar">
-                    <div
-                    className={`probability-fill ${
-                        item.result === "POSITIVE" ? "positive" : "negative"
-                    }`}
-                    style={{ width: `${item.probability}%` }}
-                    />
-                </div>
-                </div>
-            ))
-            )}
+            );
+            })}
         </div>
         </section>
     );
-}
+    }
 
 export default DetailResultList;
