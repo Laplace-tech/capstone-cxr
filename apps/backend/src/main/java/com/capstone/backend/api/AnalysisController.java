@@ -1,16 +1,18 @@
 package com.capstone.backend.api;
 
+import com.capstone.backend.domain.Analysis;
 import com.capstone.backend.dto.AiPredictResponse;
 import com.capstone.backend.dto.AnalysisResultResponse;
+import com.capstone.backend.repository.AnalysisRepository;
 import com.capstone.backend.service.AnalysisService;
+import com.capstone.backend.service.ImageStorageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/api/v1/analyses")
@@ -19,11 +21,11 @@ public class AnalysisController {
     @Autowired
     private AnalysisService analysisService;
 
-    // 임시 저장소 (DB 연결 전까지 메모리에 저장)
-    private final ConcurrentHashMap<String, AnalysisResultResponse> resultStore
-        = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, String> statusStore
-        = new ConcurrentHashMap<>();
+    @Autowired
+    private ImageStorageService imageStorageService;
+
+    @Autowired
+    private AnalysisRepository analysisRepository;
 
     // ① 분석 요청
     @PostMapping
@@ -32,26 +34,32 @@ public class AnalysisController {
 
         String analysisId = UUID.randomUUID().toString();
 
-        // 초기 상태 저장
-        statusStore.put(analysisId, "processing");
-
         try {
-            // AI 서버 호출
-            AiPredictResponse aiResponse = analysisService.callAiPredict(image);
+            // 1. 이미지 저장
+            String imagePath = imageStorageService.save(analysisId, image);
 
-            // 결과 변환 후 저장
-            AnalysisResultResponse result = analysisService.convertToResult(
-                analysisId, aiResponse);
-            resultStore.put(analysisId, result);
-            statusStore.put(analysisId, "completed");
+            // 2. DB에 초기 저장
+            analysisService.createAnalysis(analysisId, imagePath);
+
+            // 3. AI 서버 호출
+            AiPredictResponse aiResponse = analysisService.callAiPredict(
+                analysisId, imagePath, false);
+
+            // 4. 결과 DB 저장
+            analysisService.saveResult(analysisId, aiResponse);
 
         } catch (Exception e) {
-            statusStore.put(analysisId, "failed");
+            analysisService.updateStatus(analysisId, "failed");
         }
+
+        // 5. 현재 상태 조회 후 반환
+        String status = analysisRepository.findById(analysisId)
+            .map(a -> a.getStatus())
+            .orElse("failed");
 
         return ResponseEntity.ok(Map.of(
             "analysisId", analysisId,
-            "status", statusStore.get(analysisId)
+            "status", status
         ));
     }
 
@@ -60,7 +68,9 @@ public class AnalysisController {
     public ResponseEntity<Map<String, String>> getStatus(
         @PathVariable String analysisId) {
 
-        String status = statusStore.getOrDefault(analysisId, "not_found");
+        String status = analysisRepository.findById(analysisId)
+            .map(a -> a.getStatus())
+            .orElse("not_found");
 
         return ResponseEntity.ok(Map.of(
             "analysisId", analysisId,
@@ -73,7 +83,7 @@ public class AnalysisController {
     public ResponseEntity<?> getResult(
         @PathVariable String analysisId) {
 
-        AnalysisResultResponse result = resultStore.get(analysisId);
+        AnalysisResultResponse result = analysisService.getResult(analysisId);
 
         if (result == null) {
             return ResponseEntity.notFound().build();

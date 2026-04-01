@@ -1,14 +1,14 @@
 package com.capstone.backend.service;
 
+import com.capstone.backend.domain.Analysis;
+import com.capstone.backend.dto.AiPredictRequest;
 import com.capstone.backend.dto.AiPredictResponse;
 import com.capstone.backend.dto.AnalysisResultResponse;
+import com.capstone.backend.repository.AnalysisRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.MediaType;
-import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
@@ -19,33 +19,85 @@ public class AnalysisService {
 
     private final WebClient webClient;
 
-    // AI 서버 주소를 application.properties에서 가져옴
+    @Autowired
+    private AnalysisRepository analysisRepository;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     public AnalysisService(@Value("${ai.service.base-url}") String aiBaseUrl) {
         this.webClient = WebClient.builder()
             .baseUrl(aiBaseUrl)
             .build();
     }
 
-    // AI 서버에 이미지 보내고 결과 받기
-    public AiPredictResponse callAiPredict(MultipartFile image) throws Exception {
-        MultipartBodyBuilder builder = new MultipartBodyBuilder();
-        builder.part("file", new ByteArrayResource(image.getBytes()) {
-            @Override
-            public String getFilename() {
-                return image.getOriginalFilename();
-            }
-        }).contentType(MediaType.IMAGE_PNG);
+    // 분석 요청 초기 저장
+    public Analysis createAnalysis(String analysisId, String imagePath) {
+        Analysis analysis = new Analysis(analysisId, "processing", imagePath);
+        return analysisRepository.save(analysis);
+    }
+
+    // 상태 업데이트
+    public void updateStatus(String analysisId, String status) {
+        analysisRepository.findById(analysisId).ifPresent(analysis -> {
+            analysis.setStatus(status);
+            analysisRepository.save(analysis);
+        });
+    }
+
+    // AI 서버 호출
+    public AiPredictResponse callAiPredict(
+        String analysisId,
+        String imagePath,
+        boolean includeGradcam) {
+
+        AiPredictRequest request = new AiPredictRequest(
+            analysisId, imagePath, includeGradcam);
 
         return webClient.post()
             .uri("/predict")
-            .contentType(MediaType.MULTIPART_FORM_DATA)
-            .body(BodyInserters.fromMultipartData(builder.build()))
+            .bodyValue(request)
             .retrieve()
             .bodyToMono(AiPredictResponse.class)
-            .block(); // 동기 방식으로 응답 기다리기
+            .block();
     }
 
-    // AI 응답 → 프론트 응답으로 변환
+    // AI 응답 DB 저장
+    public void saveResult(String analysisId, AiPredictResponse aiResponse) {
+        analysisRepository.findById(analysisId).ifPresent(analysis -> {
+            try {
+                // 결과 JSON 통째로 저장
+                String resultJson = objectMapper.writeValueAsString(aiResponse);
+                analysis.setResultJson(resultJson);
+                analysis.setModelVersion(aiResponse.getModelVersion());
+                analysis.setThresholdVersion(aiResponse.getThresholdVersion());
+                analysis.setStatus("completed");
+                analysisRepository.save(analysis);
+            } catch (Exception e) {
+                analysis.setStatus("failed");
+                analysisRepository.save(analysis);
+            }
+        });
+    }
+
+    // DB에서 결과 조회 → 프론트 응답으로 변환
+    public AnalysisResultResponse getResult(String analysisId) {
+        Analysis analysis = analysisRepository.findById(analysisId)
+            .orElse(null);
+
+        if (analysis == null || analysis.getResultJson() == null) {
+            return null;
+        }
+
+        try {
+            AiPredictResponse aiResponse = objectMapper
+                .readValue(analysis.getResultJson(), AiPredictResponse.class);
+            return convertToResult(analysisId, aiResponse);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    // AI 응답 → 프론트 응답 변환
     public AnalysisResultResponse convertToResult(
         String analysisId,
         AiPredictResponse aiResponse) {
@@ -60,11 +112,19 @@ public class AnalysisService {
                 .build())
             .collect(Collectors.toList());
 
+        AnalysisResultResponse.GradcamPayload gradcam =
+            AnalysisResultResponse.GradcamPayload.builder()
+                .available(aiResponse.getGradcam().isAvailable())
+                .overlayPath(aiResponse.getGradcam().getOverlayPath())
+                .build();
+
         return AnalysisResultResponse.builder()
             .analysisId(analysisId)
             .status("completed")
             .modelVersion(aiResponse.getModelVersion())
+            .thresholdVersion(aiResponse.getThresholdVersion())
             .labels(labels)
+            .gradcam(gradcam)
             .build();
     }
 }
