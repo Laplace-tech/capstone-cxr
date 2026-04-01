@@ -1,11 +1,13 @@
 import { useState } from "react";
 import "./App.css";
+import LoginPage from "./pages/LoginPage";
 import AnalysisPage from "./pages/AnalysisPage";
 import HistoryPage from "./pages/HistoryPage";
 import { useAnalysis } from "./hooks/useAnalysis";
 import { useAnalysisStore } from "./stores/analysisStore";
 
 function App() {
+  const [user, setUser] = useState(null);
   const [currentPage, setCurrentPage] = useState("analysis");
 
   const { analysisStatus, result, error, selectedAnalysisId } = useAnalysis();
@@ -18,6 +20,10 @@ function App() {
     setCurrentPage("analysis");
   };
 
+  if (!user) {
+    return <LoginPage onLogin={(userData) => setUser(userData)} />;
+  }
+
   return (
     <div className="app">
       <header className="header">
@@ -28,10 +34,25 @@ function App() {
             현재 선택된 분석 ID: {selectedAnalysisId}
           </p>
         </div>
-
-        <span className={`status-badge ${analysisStatus}`}>
-          {analysisStatus}
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <span className={`status-badge ${analysisStatus}`}>
+            {analysisStatus}
+          </span>
+          <button
+            onClick={() => setUser(null)}
+            style={{
+              padding: "6px 14px",
+              borderRadius: "8px",
+              border: "1.5px solid #e2e8f0",
+              background: "white",
+              fontSize: "12px",
+              color: "#64748b",
+              cursor: "pointer",
+            }}
+          >
+            로그아웃
+          </button>
+        </div>
       </header>
 
       <div className="tab-buttons">
@@ -41,7 +62,6 @@ function App() {
         >
           Analysis
         </button>
-
         <button
           className={currentPage === "history" ? "active" : ""}
           onClick={() => setCurrentPage("history")}
@@ -58,7 +78,6 @@ function App() {
             error={error}
           />
         )}
-
         {currentPage === "history" && (
           <HistoryPage onSelect={handleSelect} />
         )}
