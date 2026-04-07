@@ -8,6 +8,7 @@ import com.capstone.backend.repository.AnalysisRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -32,7 +33,7 @@ public class AnalysisService {
 
     // 분석 요청 초기 저장
     public Analysis createAnalysis(String analysisId, String imagePath) {
-        Analysis analysis = new Analysis(analysisId, "processing", imagePath);
+        Analysis analysis = new Analysis(analysisId, "queued", imagePath);
         return analysisRepository.save(analysis);
     }
 
@@ -44,28 +45,37 @@ public class AnalysisService {
         });
     }
 
-    // AI 서버 호출
-    public AiPredictResponse callAiPredict(
-        String analysisId,
-        String imagePath,
-        boolean includeGradcam) {
+    // AI 서버 호출 + 결과 저장 (비동기)
+    @Async
+    public void processAnalysis(String analysisId, String imagePath) {
+        try {
+            // 1. 상태 processing으로 변경
+            updateStatus(analysisId, "processing");
 
-        AiPredictRequest request = new AiPredictRequest(
-            analysisId, imagePath, includeGradcam);
+            // 2. AI 서버 호출
+            AiPredictRequest request = new AiPredictRequest(
+                analysisId, imagePath, true);
 
-        return webClient.post()
-            .uri("/predict")
-            .bodyValue(request)
-            .retrieve()
-            .bodyToMono(AiPredictResponse.class)
-            .block();
+            AiPredictResponse aiResponse = webClient.post()
+                .uri("/predict")
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(AiPredictResponse.class)
+                .block();
+
+            // 3. 결과 DB 저장
+            saveResult(analysisId, aiResponse);
+
+        } catch (Exception e) {
+            // AI 호출 실패
+            updateStatus(analysisId, "failed");
+        }
     }
 
     // AI 응답 DB 저장
     public void saveResult(String analysisId, AiPredictResponse aiResponse) {
         analysisRepository.findById(analysisId).ifPresent(analysis -> {
             try {
-                // 결과 JSON 통째로 저장
                 String resultJson = objectMapper.writeValueAsString(aiResponse);
                 analysis.setResultJson(resultJson);
                 analysis.setModelVersion(aiResponse.getModelVersion());

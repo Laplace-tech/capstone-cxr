@@ -1,7 +1,5 @@
 package com.capstone.backend.api;
 
-import com.capstone.backend.domain.Analysis;
-import com.capstone.backend.dto.AiPredictResponse;
 import com.capstone.backend.dto.AnalysisResultResponse;
 import com.capstone.backend.repository.AnalysisRepository;
 import com.capstone.backend.service.AnalysisService;
@@ -27,39 +25,37 @@ public class AnalysisController {
     @Autowired
     private AnalysisRepository analysisRepository;
 
-    // ① 분석 요청
+    // ① 분석 요청 (즉시 응답 + 백그라운드 처리)
     @PostMapping
-    public ResponseEntity<Map<String, String>> createAnalysis(
+    public ResponseEntity<?> createAnalysis(
         @RequestParam("image") MultipartFile image) {
 
         String analysisId = UUID.randomUUID().toString();
 
         try {
-            // 1. 이미지 저장
+            // 1. 이미지 저장 (검증 포함)
             String imagePath = imageStorageService.save(analysisId, image);
 
-            // 2. DB에 초기 저장
+            // 2. DB에 초기 저장 (queued 상태)
             analysisService.createAnalysis(analysisId, imagePath);
 
-            // 3. AI 서버 호출
-            AiPredictResponse aiResponse = analysisService.callAiPredict(
-                analysisId, imagePath, false);
+            // 3. AI 호출은 백그라운드에서 처리 (@Async)
+            analysisService.processAnalysis(analysisId, imagePath);
 
-            // 4. 결과 DB 저장
-            analysisService.saveResult(analysisId, aiResponse);
-
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of(
+                "error", e.getMessage()
+            ));
         } catch (Exception e) {
-            analysisService.updateStatus(analysisId, "failed");
+            return ResponseEntity.internalServerError().body(Map.of(
+                "error", "서버 오류가 발생했습니다."
+            ));
         }
 
-        // 5. 현재 상태 조회 후 반환
-        String status = analysisRepository.findById(analysisId)
-            .map(a -> a.getStatus())
-            .orElse("failed");
-
+        // 4. AI 기다리지 않고 즉시 queued 상태로 반환
         return ResponseEntity.ok(Map.of(
             "analysisId", analysisId,
-            "status", status
+            "status", "queued"
         ));
     }
 

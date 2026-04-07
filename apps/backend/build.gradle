@@ -26,6 +26,7 @@ dependencies {
   implementation 'org.postgresql:postgresql'
   implementation 'com.fasterxml.jackson.core:jackson-databind'
 
+  runtimeOnly 'com.h2database:h2'
   compileOnly 'org.projectlombok:lombok'                                  // Lombok
   annotationProcessor 'org.projectlombok:lombok'                          // Lombok
 
