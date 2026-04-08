@@ -31,15 +31,19 @@ export function useAnalysis() {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
       setResult({
-        id: data.id,
+        id: data.analysisId,
         modelVersion: data.modelVersion,
         predictionSummary: {
-          positiveLabels: data.predictionSummary?.positiveLabels || [],
-          totalCount: data.predictionSummary?.totalCount || 0,
+          positiveLabels: data.labels?.filter(l => l.prediction).map(l => l.name) || [],
+          totalCount: data.labels?.length || 0,
         },
-        details: data.details || [],
-        gradCamUrl: data.gradCamUrl || "",
-        originalImage: data.originalImage || "",
+        details: data.labels?.map(l => ({
+          name: l.name,
+          probability: l.probability,
+          result: l.prediction ? "POSITIVE" : "NEGATIVE",
+        })) || [],
+        gradCamUrl: data.gradcam?.overlayPath || "",
+        originalImage: "",
       });
       setAnalysisStatus("completed");
       stopPolling();
