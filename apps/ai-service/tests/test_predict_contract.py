@@ -11,6 +11,8 @@ from ai_service.api.main import app
 from ai_service.infrastructure.settings import get_settings
 
 
+# run: PYTHONPATH=src pytest -q tests/test_predict_contract.py
+
 # 각 테스트 전/후에 캐시를 비워서 테스트가 서로 독립적으로 돌게 만든다
 @pytest.fixture(autouse=True)
 def clear_settings_cache() -> None:

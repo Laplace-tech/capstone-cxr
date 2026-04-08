@@ -6,16 +6,14 @@ from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
-# 현재 파일:
-# apps/ai-service/src/ai_service/infrastructure/settings.py
-#
-# parents 기준:
-# [0] infrastructure
-# [1] ai_service
-# [2] src
-# [3] ai-service
-# [4] apps
-# [5] capstone-cxr
+
+# 현재 파일 기준 parents:
+# parents[0] = capstone-cxr/apps/ai-service/src/ai_service/infrastructure
+# parents[1] = capstone-cxr/apps/ai-service/src/ai_service
+# parents[2] = capstone-cxr/apps/ai-service/src
+# parents[3] = capstone-cxr/apps/ai-service
+# parents[4] = capstone-cxr/apps
+# parents[5] = capstone-cxr
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3] # capstone-cxr/apps/ai-service
 REPO_ROOT = PROJECT_ROOT.parents[1]                # capstone-cxr
@@ -51,56 +49,49 @@ class Settings:
     allowed_image_suffixes: tuple[str, ...]
 
 
+
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
     """
     애플리케이션 전체에서 공유할 단일 Settings 객체를 반환
 
     - 경로/환경변수 source of truth는 여기 하나로 몰아둠
-    - 파일 존재 여부 검사는 여기서 하지 않음
-    그 책임은 startup.py에 둔다
+    - 파일 존재 여부 검사는 여기서 하지 않고 해당 책임은 startup.py에 둔다
     """
     
-    # 서비스 이름/버전
+    # 서비스 메타 정보
     service_name = _get_env_str("SERVICE_NAME", "capstone-cxr-ai-service")
     service_version = _get_env_str("SERVICE_VERSION", "0.1.0")
     
-    # shared 디렉터리
-    # docker-compose에서는 /shared 계열이 들어오고,
-    # 로컬 실행에서는 repo 기준 경로를 기본값으로 사용한다.
+    # shared 루트 및 입출력 디렉터리
     shared_root = _get_env_path(
         "SHARED_ROOT",
-        default=REPO_ROOT / "shared",
-        base_dir=REPO_ROOT,
+        default=REPO_ROOT / "shared",       # capstone-cxr/shared
+        base_dir=REPO_ROOT,                 # capstone-cxr
     )
-    
     shared_uploads_dir = _get_env_path(
         "SHARED_UPLOADS_DIR",
-        default=shared_root / "uploads",
-        base_dir=REPO_ROOT,
+        default=shared_root / "uploads",    # capstone-cxr/uploads
+        base_dir=REPO_ROOT,                 # capstone-cxr
     )
-
     shared_generated_dir = _get_env_path(
         "SHARED_GENERATED_DIR",
-        default=shared_root / "generated",
-        base_dir=REPO_ROOT,
+        default=shared_root / "generated",  # capstone-cxr/generated
+        base_dir=REPO_ROOT,                 # capstone-cxr
     )
     
-    # AI 배포 자산 디렉터리
-    # docker-compose에서는 /app/artifacts
-    # 로컬에서는 apps/ai-service/artifacts
+    # AI 서비스 내부 자산 루트
     artifacts_root = _get_env_path(
         "ARTIFACTS_ROOT",
-        default=PROJECT_ROOT / "artifacts",
-        base_dir=PROJECT_ROOT,
+        default=PROJECT_ROOT / "artifacts", # capstone-cxr/apps/ai-service/artifacts
+        base_dir=PROJECT_ROOT,              # capstone-cxr/apps/ai-service
     )
-
-    checkpoints_dir = artifacts_root / "checkpoints"
+    checkpoints_dir = artifacts_root / "checkpoints"  # capstone-cxr/apps/ai-service/artifacts/checkpoints
     
-    # baseline 핵심 파일 경로
-    checkpoint_path = checkpoints_dir / "best.pt"
-    thresholds_path = checkpoints_dir / "infer_thresholds.json"
-    config_snapshot_path = checkpoints_dir / "config_snapshot.json"
+    # 배포 기준 핵심 파일
+    checkpoint_path = checkpoints_dir / "best.pt"                   # capstone-cxr/apps/ai-service/artifacts/checkpoints/best.pt
+    thresholds_path = checkpoints_dir / "infer_thresholds.json"     # capstone-cxr/apps/ai-service/artifacts/checkpoints/infer_thresholds.json
+    config_snapshot_path = checkpoints_dir / "config_snapshot.json" # capstone-cxr/apps/ai-service/artifacts/checkpoints/config_snapshot.json
 
     # 업로드 정책
     max_upload_size_mb = _get_env_int("MAX_UPLOAD_SIZE_MB", 20, min_value=1)
@@ -127,17 +118,22 @@ def get_settings() -> Settings:
     )
 
 
-# 문자열 경로를 Path로 바꾸고 절대경로로 정규화한다.
-def _resolve_path(raw_value: str, *, base_dir: Path) -> Path:
-    path = Path(raw_value).expanduser()
+# 환경변수에서 "경로"를 읽어 절대경로로 변환하는 헬퍼 메서드
+def _get_env_path(env_name: str, *, default: Path, base_dir: Path) -> Path:
+    """
+    default는 이미 Path로 전달받고,
+    env 값이 있으면 상대/절대를 구분해 base_dir 기준으로 정규화한다.
+    """
+    raw_value = os.getenv(env_name)
+    # ex: os.getenv("SHARED_ROOT")
 
-    if not path.is_absolute():
-        path = base_dir / path
-        # raw_value = "shared/uploads"
-        # base_dir = /home/anna/projects/capstone-cxr
-        # 결과 = /home/anna/projects/capstone-cxr/shared/uploads
+    # 환경변수가 없거나 빈 문자열이면 default 사용, 절대경로로 정리해서 반환
+    if raw_value is None or raw_value.strip() == "":
+        return default.resolve()
 
-    return path.resolve() # 최종적으로 절대경로로 정규화해서 반환.
+    return _resolve_path(raw_value, base_dir=base_dir)
+    # 절대경로면 그대로 냅둠.
+    # 상대경로면 base_dir 기준으로 붙여서 처리한다.
 
 
 
@@ -175,23 +171,18 @@ def _get_env_int(name: str, default: int, *, min_value: int = 1) -> int:
 
 
 
-# 환경변수에서 "경로"를 읽는다. env_name에 해당하는 값이 없으면 default 사용
-def _get_env_path(env_name: str, *, default: Path, base_dir: Path) -> Path:
-    """
-    default는 이미 Path로 전달받고,
-    env 값이 있으면 상대/절대를 구분해 base_dir 기준으로 정규화한다.
-    """
-    raw_value = os.getenv(env_name)
-    # ex: os.getenv("SHARED_ROOT")
+# 문자열 경로를 Path로 바꾸고 절대경로로 정규화한다.
+def _resolve_path(raw_value: str, *, base_dir: Path) -> Path:
+    path = Path(raw_value).expanduser()
 
-    # 환경변수가 없거나 빈 문자열이면 default 사용, 절대경로로 정리해서 반환
-    if raw_value is None or raw_value.strip() == "":
-        return default.resolve()
+    # raw_value가 상대경로면
+    if not path.is_absolute():
+        path = base_dir / path
+        # raw_value = "shared/uploads"
+        # base_dir = /home/anna/projects/capstone-cxr
+        # 결과 = /home/anna/projects/capstone-cxr/shared/uploads
 
-    return _resolve_path(raw_value, base_dir=base_dir)
-    # 환경변수가 있으면 그 값을 경로로 해석함
-    # 절대경로면 그대로 냅둠.
-    # 상대경로면 base_dir 기준으로 붙여서 처리한다.
+    return path.resolve() # 최종적으로 절대경로로 정규화해서 반환.
 
 
 # 허용 확장자 문자열을 파싱한다

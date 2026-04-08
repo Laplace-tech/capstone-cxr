@@ -1,4 +1,3 @@
-# apps/ai-service/src/ai_service/api/routers/version.py
 from fastapi import APIRouter
 
 from ai_service.infrastructure import settings
