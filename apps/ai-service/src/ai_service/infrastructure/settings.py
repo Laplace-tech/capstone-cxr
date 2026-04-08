@@ -7,17 +7,37 @@ from functools import lru_cache
 from pathlib import Path
 
 
-# 현재 파일 기준 parents:
-# parents[0] = capstone-cxr/apps/ai-service/src/ai_service/infrastructure
-# parents[1] = capstone-cxr/apps/ai-service/src/ai_service
-# parents[2] = capstone-cxr/apps/ai-service/src
-# parents[3] = capstone-cxr/apps/ai-service
-# parents[4] = capstone-cxr/apps
-# parents[5] = capstone-cxr
+def _detect_project_and_repo_root() -> tuple[Path, Path]:
+    """
+    실행 환경에 따라 project_root / repo_root를 안전하게 계산한다.
 
-PROJECT_ROOT = Path(__file__).resolve().parents[3] # capstone-cxr/apps/ai-service
-REPO_ROOT = PROJECT_ROOT.parents[1]                # capstone-cxr
+    로컬 개발:
+    - __file__ 기준으로 .../apps/ai-service 까지 올라감
+    - repo_root 는 .../capstone-cxr
 
+    Docker 컨테이너:
+    - 보통 ai-service 앱 루트가 /app
+    - 이 경우 /app 자체를 project_root 로 보고
+      repo_root 도 /app 로 둔다
+    """
+    resolved = Path(__file__).resolve()
+
+    # /app/src/ai_service/infrastructure/settings.py
+    # 또는 /home/anna/projects/capstone-cxr/apps/ai-service/src/ai_service/infrastructure/settings.py
+    project_root = resolved.parents[3]
+
+    # 로컬 실행: .../apps/ai-service
+    if project_root.name == "ai-service":
+        repo_root = project_root.parents[1]
+        return project_root, repo_root
+
+    # 컨테이너 실행: /app
+    # 여기선 capstone-cxr 전체 repo root 개념을 따로 강제하지 말고
+    # /app 자체를 repo_root 로 본다.
+    return project_root, project_root
+
+
+PROJECT_ROOT, REPO_ROOT = _detect_project_and_repo_root()
 
 @dataclass(frozen=True, slots=True)
 class Settings:
