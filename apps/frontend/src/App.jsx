@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "./App.css";
 import LoginPage from "./pages/LoginPage";
+import SingupPage from "./pages/SignupPage";
+import PendingPage from "./pages/PendingPage";
 import AnalysisPage from "./pages/AnalysisPage";
 import HistoryPage from "./pages/HistoryPage";
 import { useAnalysis } from "./hooks/useAnalysis";
@@ -8,6 +10,8 @@ import { useAnalysisStore } from "./stores/analysisStore";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [authPage, setAuthPage] = useState("login"); // "login" | "signup" | "pending"
+  const [pendingEmail, setPendingEmail] = useState("");
   const [currentPage, setCurrentPage] = useState("analysis");
 
   const { analysisStatus, result, error, selectedAnalysisId } = useAnalysis();
@@ -20,10 +24,39 @@ function App() {
     setCurrentPage("analysis");
   };
 
+  // 비로그인 상태 → 인증 화면
   if (!user) {
-    return <LoginPage onLogin={(userData) => setUser(userData)} />;
+    if (authPage === "signup") {
+      return (
+        <SingupPage
+          onGoLogin={(state, email) => {
+            if (state === "pending") {
+              setPendingEmail(email || "");
+              setAuthPage("pending");
+            } else {
+              setAuthPage("login");
+            }
+          }}
+        />
+      );
+    }
+    if (authPage === "pending") {
+      return (
+        <PendingPage
+          email={pendingEmail}
+          onGoLogin={() => setAuthPage("login")}
+        />
+      );
+    }
+    return (
+      <LoginPage
+        onLogin={(userData) => setUser(userData)}
+        onGoSignup={() => setAuthPage("signup")}
+      />
+    );
   }
 
+  // 로그인 상태 → 대시보드
   return (
     <div className="app">
       <header className="header">

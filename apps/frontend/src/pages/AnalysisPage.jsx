@@ -7,46 +7,58 @@ import DragAndDropZone from "../components/upload/DragAndDropZone";
 import Button from "../components/common/Button";
 import StatusBadge from "../components/common/StatusBadge";
 import { ResultSkeleton } from "../components/common/Skeleton";
+import { useAnalysis } from "../hooks/useAnalysis";
 
-function AnalysisPage({ analysisStatus, result, error }) {
+function AnalysisPage() {
   const [selectedFile, setSelectedFile] = useState(null);
+  const { analysisStatus, result, error, startAnalysis, reset } = useAnalysis();
+  const isLoading = ["uploading", "queued", "processing"].includes(analysisStatus);
 
   function handleAnalyze() {
     if (!selectedFile) return;
-    // TODO: 백엔드 연동 시 여기서 실제 API 호출
-    alert("업로드 기능은 백엔드 연동 후 활성화됩니다.");
+    startAnalysis(selectedFile);
+  }
+
+  function handleReset() {
+    reset();
+    setSelectedFile(null);
   }
 
   return (
     <div className="analysis-page">
-
-      {/* ── 업로드 영역 (A파트) ── */}
       <section className="state-card">
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
           <h2 style={{ margin: 0 }}>X-ray 이미지 업로드</h2>
           <StatusBadge status={
-            analysisStatus === "loading"   ? "processing" :
-            analysisStatus === "completed" ? "completed"  :
-            analysisStatus === "error"     ? "failed"     : "idle"
+            analysisStatus === "uploading"  ? "uploading"  :
+            analysisStatus === "queued"     ? "queued"     :
+            analysisStatus === "processing" ? "processing" :
+            analysisStatus === "completed"  ? "completed"  :
+            analysisStatus === "error"      ? "failed"     : "idle"
           } />
         </div>
         <DragAndDropZone onFileSelect={setSelectedFile} />
-        <div style={{ marginTop: "1rem" }}>
-          <Button onClick={handleAnalyze} disabled={!selectedFile}>
-            분석 시작
+        <div style={{ marginTop: "1rem", display: "flex", gap: "8px" }}>
+          <Button onClick={handleAnalyze} disabled={!selectedFile || isLoading} loading={isLoading}>
+            {isLoading ? "분석 중..." : "분석 시작"}
           </Button>
+          {analysisStatus !== "idle" && (
+            <Button variant="secondary" onClick={handleReset}>초기화</Button>
+          )}
         </div>
       </section>
 
-      {/* ── 로딩 ── */}
-      {analysisStatus === "loading" && (
+      {isLoading && (
         <section className="state-card">
-          <h2>분석 결과를 불러오는 중입니다...</h2>
+          <h2>
+            {analysisStatus === "uploading" && "이미지 업로드 중..."}
+            {analysisStatus === "queued" && "분석 대기 중..."}
+            {analysisStatus === "processing" && "AI가 분석 중입니다..."}
+          </h2>
           <ResultSkeleton />
         </section>
       )}
 
-      {/* ── 에러 ── */}
       {analysisStatus === "error" && (
         <section className="state-card error-card">
           <h2>오류가 발생했습니다</h2>
@@ -54,7 +66,6 @@ function AnalysisPage({ analysisStatus, result, error }) {
         </section>
       )}
 
-      {/* ── 결과 (B파트) ── */}
       {analysisStatus === "completed" && result && (
         <>
           <ResultSummary result={result} />
@@ -63,7 +74,6 @@ function AnalysisPage({ analysisStatus, result, error }) {
           <InfoSection />
         </>
       )}
-
     </div>
   );
 }

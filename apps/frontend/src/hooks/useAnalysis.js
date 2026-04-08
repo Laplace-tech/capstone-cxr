@@ -1,65 +1,124 @@
-import { useEffect } from "react";
-import { analysisResults } from "../mock/analysisResults";
+import { useState, useRef, useCallback } from "react";
 import { useAnalysisStore } from "../stores/analysisStore";
 
-export function useAnalysis() {
-    const {
-        analysisStatus,
-        result,
-        error,
-        selectedAnalysisId,
-        setAnalysisStatus,
-        setResult,
-        setError,
-    } = useAnalysisStore();
+const POLL_INTERVAL_MS = 2000;
+const POLL_TIMEOUT_MS = 120000;
 
-    const mapAnalysisResult = (data) => {
-        return {
+export function useAnalysis() {
+  const {
+    analysisStatus,
+    result,
+    error,
+    setAnalysisStatus,
+    setResult,
+    setError,
+    setSelectedAnalysisId,
+  } = useAnalysisStore();
+
+  const pollingRef = useRef(null);
+  const startedAtRef = useRef(null);
+
+  const stopPolling = useCallback(() => {
+    if (pollingRef.current) {
+      clearInterval(pollingRef.current);
+      pollingRef.current = null;
+    }
+  }, []);
+
+  const fetchResult = useCallback(async (id) => {
+    try {
+      const response = await fetch(`/api/v1/analyses/${id}/result`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      setResult({
         id: data.id,
         modelVersion: data.modelVersion,
         predictionSummary: {
-            positiveLabels: data.predictionSummary?.positiveLabels || [],
-            totalCount: data.predictionSummary?.totalCount || 0,
+          positiveLabels: data.predictionSummary?.positiveLabels || [],
+          totalCount: data.predictionSummary?.totalCount || 0,
         },
         details: data.details || [],
         gradCamUrl: data.gradCamUrl || "",
         originalImage: data.originalImage || "",
-        };
-    };
+      });
+      setAnalysisStatus("completed");
+      stopPolling();
+    } catch {
+      setAnalysisStatus("error");
+      setError("결과를 불러오는 데 실패했어요.");
+      stopPolling();
+    }
+  }, [setResult, setAnalysisStatus, setError, stopPolling]);
 
-    useEffect(() => {
-        const fetchAnalysisResult = async () => {
-        try {
-            setAnalysisStatus("loading");
-            setError("");
-
-            // 나중에 실제 API 연결 시 교체
-            // const response = await fetch(`/api/v1/analyses/${selectedAnalysisId}/result`);
-            // if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            // const rawData = await response.json();
-
-            const rawData = analysisResults[selectedAnalysisId];
-
-            if (!rawData) {
-            throw new Error("해당 분석 결과를 찾을 수 없습니다.");
-            }
-
-            const mappedData = mapAnalysisResult(rawData);
-            setResult(mappedData);
-            setAnalysisStatus("completed");
-        } catch (err) {
-            setError(err.message || "결과를 불러오지 못했습니다.");
-            setAnalysisStatus("error");
+  const startPolling = useCallback((id) => {
+    startedAtRef.current = Date.now();
+    pollingRef.current = setInterval(async () => {
+      if (Date.now() - startedAtRef.current > POLL_TIMEOUT_MS) {
+        setAnalysisStatus("error");
+        setError("분석 시간이 초과됐어요. 다시 시도해 주세요.");
+        stopPolling();
+        return;
+      }
+      try {
+        const response = await fetch(`/api/v1/analyses/${id}`);
+        if (!response.ok) return;
+        const data = await response.json();
+        const status = data.status?.toLowerCase();
+        if (status === "completed") {
+          setAnalysisStatus("processing");
+          await fetchResult(id);
+        } else if (status === "failed") {
+          setAnalysisStatus("error");
+          setError("분석에 실패했어요.");
+          stopPolling();
+        } else if (status === "processing") {
+          setAnalysisStatus("processing");
+        } else {
+          setAnalysisStatus("queued");
         }
-        };
+      } catch {
+        // 네트워크 오류 무시
+      }
+    }, POLL_INTERVAL_MS);
+  }, [fetchResult, setAnalysisStatus, setError, stopPolling]);
 
-        fetchAnalysisResult();
-    }, [selectedAnalysisId, setAnalysisStatus, setError, setResult]);
+  const startAnalysis = useCallback(async (file) => {
+    if (!file) return;
+    stopPolling();
+    setAnalysisStatus("uploading");
+    setError("");
+    setResult(null);
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      const response = await fetch("/api/v1/analyses", {
+        method: "POST",
+        body: formData,
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      const id = data.analysisId;
+      setSelectedAnalysisId(id);
+      setAnalysisStatus("queued");
+      startPolling(id);
+    } catch {
+      setAnalysisStatus("error");
+      setError("업로드에 실패했어요. 다시 시도해 주세요.");
+    }
+  }, [startPolling, stopPolling, setAnalysisStatus, setError, setResult, setSelectedAnalysisId]);
 
-    return {
-        analysisStatus,
-        result,
-        error,
-        selectedAnalysisId,
-    };
+  const reset = useCallback(() => {
+    stopPolling();
+    setAnalysisStatus("idle");
+    setResult(null);
+    setError("");
+  }, [stopPolling, setAnalysisStatus, setResult, setError]);
+
+  return {
+    analysisStatus,
+    result,
+    error,
+    startAnalysis,
+    reset,
+  };
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Stethoscope, Eye, EyeOff, LogIn } from "lucide-react";
 
-export default function LoginPage({ onLogin }) {
+export default function LoginPage({ onLogin, onGoSignup }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -207,7 +207,7 @@ export default function LoginPage({ onLogin }) {
           <p style={{ margin: 0, fontSize: "13px", color: "#94a3b8" }}>
             계정이 없으신가요?{" "}
             <span
-              onClick={() => alert("회원가입 페이지는 추후 구현 예정이에요.")}
+              onClick={() => onGoSignup && onGoSignup()}
               style={{ color: "#2563eb", fontWeight: 600, cursor: "pointer", textDecoration: "underline" }}
             >
               회원가입
