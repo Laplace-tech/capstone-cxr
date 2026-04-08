@@ -1,0 +1,25 @@
+{
+  "criterion": "f1",
+  "thresholds": [
+    0.4600000000000001,
+    0.11000000000000001,
+    0.4700000000000001,
+    0.34,
+    0.37000000000000005
+  ],
+  "thresholds_str_for_infer": "0.46,0.11,0.47,0.34,0.37",
+  "labels": [
+    "Atelectasis",
+    "Cardiomegaly",
+    "Consolidation",
+    "Edema",
+    "Pleural Effusion"
+  ],
+  "prediction_csv": "/home/anna/projects/chexpert_poc/outputs/train_runs/run_20260321_125758/eval/study_predictions.csv",
+  "threshold_grid": {
+    "th_min": 0.05,
+    "th_max": 0.95,
+    "th_step": 0.01
+  },
+  "warning": "These thresholds are tuned on the same validation predictions used to measure performance. Treat them as validation-tuned operating points, not unbiased generalization estimates."
+}
