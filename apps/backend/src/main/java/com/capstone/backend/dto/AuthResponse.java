@@ -5,13 +5,13 @@ public class AuthResponse {
     private final String tokenType;
     private final String accessToken;
     private final long expiresInMs;
-    private final String username;
+    private final String email;
 
-    public AuthResponse(String accessToken, long expiresInMs, String username) {
+    public AuthResponse(String accessToken, long expiresInMs, String email) {
         this.tokenType = "Bearer";
         this.accessToken = accessToken;
         this.expiresInMs = expiresInMs;
-        this.username = username;
+        this.email = email;
     }
 
     public String getTokenType() {
@@ -26,7 +26,7 @@ public class AuthResponse {
         return expiresInMs;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 }
