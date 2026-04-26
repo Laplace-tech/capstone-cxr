@@ -2,7 +2,9 @@ package com.capstone.backend.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Setter;
 
+@Setter
 public class SignupRequest {
 
     @NotBlank(message = "이메일을 입력해주세요.")
