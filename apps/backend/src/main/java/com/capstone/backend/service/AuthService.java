@@ -37,6 +37,8 @@ public class AuthService {
 
         UserAccount user = new UserAccount(
             request.getEmail(),
+            request.getLastName(),
+            request.getFirstName(),
             passwordEncoder.encode(request.getPassword()),
             request.getLicenseNumber(),
             request.getHospital(),

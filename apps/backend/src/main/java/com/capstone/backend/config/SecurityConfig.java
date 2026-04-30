@@ -26,6 +26,8 @@ public class SecurityConfig {
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/v1/auth/**").permitAll()
+                .requestMatchers("/api/v1/analyses/**").permitAll()
+                .requestMatchers("/api/v1/files/**").permitAll()
 
                 // frontend ↔ backend 연결 테스트용
                 .requestMatchers("/api/hello").permitAll()

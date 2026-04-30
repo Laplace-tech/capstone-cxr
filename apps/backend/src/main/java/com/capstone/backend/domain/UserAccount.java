@@ -20,6 +20,12 @@ public class UserAccount {
     @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
+    @Column(name = "last_name", nullable = false, length = 100)
+    private String lastName;
+
+    @Column(name = "first_name", nullable = false, length = 100)
+    private String firstName;
+
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
@@ -43,6 +49,8 @@ public class UserAccount {
 
     public UserAccount(
         String email,
+        String lastName,
+        String firstName,
         String passwordHash,
         String licenseNumber,
         String hospital,
@@ -50,6 +58,8 @@ public class UserAccount {
         String status
     ) {
         this.email = email;
+        this.lastName = lastName;
+        this.firstName = firstName;
         this.passwordHash = passwordHash;
         this.licenseNumber = licenseNumber;
         this.hospital = hospital;
@@ -64,6 +74,14 @@ public class UserAccount {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
     }
 
     public String getPasswordHash() {
