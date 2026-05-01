@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/files")
@@ -16,6 +17,9 @@ public class FileController {
 
     @Value("${shared.generated.dir}")
     private String generatedDir;
+
+    @Value("${shared.uploads.dir}")
+    private String uploadsDir;
 
     // gradcam 이미지 반환
     @GetMapping("/{analysisId}/gradcam")
@@ -34,5 +38,25 @@ public class FileController {
         return ResponseEntity.ok()
             .contentType(MediaType.IMAGE_PNG)
             .body(resource);
+    }
+
+    // 원본 이미지 반환
+    @GetMapping("/{analysisId}/original")
+    public ResponseEntity<Resource> getOriginal(
+        @PathVariable String analysisId) {
+
+        Path dir = Paths.get(uploadsDir, "analyses", analysisId);
+
+        for (String ext : List.of("png", "jpg", "jpeg")) {
+            Path filePath = dir.resolve("input." + ext);
+            Resource resource = new FileSystemResource(filePath);
+            if (resource.exists()) {
+                MediaType mediaType = ext.equals("png") ? MediaType.IMAGE_PNG : MediaType.IMAGE_JPEG;
+                return ResponseEntity.ok()
+                    .contentType(mediaType)
+                    .body(resource);
+            }
+        }
+        return ResponseEntity.notFound().build();
     }
 }

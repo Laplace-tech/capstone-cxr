@@ -42,8 +42,8 @@ export function useAnalysis() {
           probability: l.probability,
           result: l.prediction ? "POSITIVE" : "NEGATIVE",
         })) || [],
-        gradCamUrl: data.gradcam?.overlayPath || "",
-        originalImage: "",
+        gradCamUrl: data.gradcam?.available ? `/api/v1/files/${data.analysisId}/gradcam` : "",
+        originalImage: `/api/v1/files/${data.analysisId}/original`,
       });
       setAnalysisStatus("completed");
       stopPolling();

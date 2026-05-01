@@ -5,7 +5,7 @@ function GradCamViewer({ result }) {
     const [showOverlay, setShowOverlay] = useState(true);
     const [opacity, setOpacity] = useState(60);
 
-    const originalImage = xrayPlaceholder;
+    const originalImage = result?.originalImage || xrayPlaceholder;
     const gradCamUrl = result?.gradCamUrl || "";
     const canShowOverlay = Boolean(result?.originalImage && gradCamUrl);
 
