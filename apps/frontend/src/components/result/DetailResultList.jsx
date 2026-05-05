@@ -15,13 +15,13 @@ function DetailResultList({ details = [] }) {
                     <div className="result-bar-bg">
                     <div
                         className={`result-bar-fill ${isPositive ? "positive" : "negative"}`}
-                        style={{ width: `${item.probability}%` }}
+                        style={{ width: `${(item.probability * 100).toFixed(1)}%` }}
                     />
                     </div>
                 </div>
 
                 <div className="result-meta">
-                    <span className="result-prob">{item.probability.toFixed(1)}%</span>
+                    <span className="result-prob">{(item.probability * 100).toFixed(1)}%</span>
                     <span className={`result-badge ${isPositive ? "positive" : "negative"}`}>
                     {item.result}
                     </span>
