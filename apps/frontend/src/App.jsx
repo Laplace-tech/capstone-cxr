@@ -1,52 +1,122 @@
-import { useEffect, useState } from 'react'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
+import LoginPage from "./pages/LoginPage";
+import SingupPage from "./pages/SignupPage";
+import PendingPage from "./pages/PendingPage";
+import AnalysisPage from "./pages/AnalysisPage";
+import HistoryPage from "./pages/HistoryPage";
+import { useAnalysis } from "./hooks/useAnalysis";
+import { useAnalysisStore } from "./stores/analysisStore";
 
 function App() {
-  const [data, setData] = useState(null)
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState(null);
+  const [authPage, setAuthPage] = useState("login"); // "login" | "signup" | "pending"
+  const [pendingEmail, setPendingEmail] = useState("");
+  const [currentPage, setCurrentPage] = useState("analysis");
 
-  useEffect(() => {
-    fetch('/api/hello')
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`)
-        }
-        return res.json()
-      })
-      .then((json) => {
-        setData(json)
-      })
-      .catch((err) => {
-        setError(err.message)
-      })
-      .finally(() => {
-        setLoading(false)
-      })
-  }, [])
+  const { analysisStatus, result, error, selectedAnalysisId } = useAnalysis();
+  const setSelectedAnalysisId = useAnalysisStore(
+    (state) => state.setSelectedAnalysisId
+  );
 
-  return (
-    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h1>capstone-cxr</h1>
-      <p>Frontend ↔ Backend 연결 테스트</p>
+  const handleSelect = (id) => {
+    setSelectedAnalysisId(id);
+    setCurrentPage("analysis");
+  };
 
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-
-      {data && (
-        <pre
-          style={{
-            padding: '1rem',
-            background: '#f4f4f4',
-            borderRadius: '8px',
-            overflowX: 'auto',
+  // 비로그인 상태 → 인증 화면
+  if (!user) {
+    if (authPage === "signup") {
+      return (
+        <SingupPage
+          onGoLogin={(state, email) => {
+            if (state === "pending") {
+              setPendingEmail(email || "");
+              setAuthPage("pending");
+            } else {
+              setAuthPage("login");
+            }
           }}
+        />
+      );
+    }
+    if (authPage === "pending") {
+      return (
+        <PendingPage
+          email={pendingEmail}
+          onGoLogin={() => setAuthPage("login")}
+        />
+      );
+    }
+    return (
+      <LoginPage
+        onLogin={(userData) => setUser(userData)}
+        onGoSignup={() => setAuthPage("signup")}
+      />
+    );
+  }
+
+  // 로그인 상태 → 대시보드
+  return (
+    <div className="app">
+      <header className="header">
+        <div>
+          <h1>Chest X-ray Analysis Dashboard</h1>
+          <p>AI 판독 결과와 Grad-CAM 시각화를 확인할 수 있습니다.</p>
+          <p className="selected-id-text">
+            현재 선택된 분석 ID: {selectedAnalysisId}
+          </p>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <span className={`status-badge ${analysisStatus}`}>
+            {analysisStatus}
+          </span>
+          <button
+            onClick={() => setUser(null)}
+            style={{
+              padding: "6px 14px",
+              borderRadius: "8px",
+              border: "1.5px solid #e2e8f0",
+              background: "white",
+              fontSize: "12px",
+              color: "#64748b",
+              cursor: "pointer",
+            }}
+          >
+            로그아웃
+          </button>
+        </div>
+      </header>
+
+      <div className="tab-buttons">
+        <button
+          className={currentPage === "analysis" ? "active" : ""}
+          onClick={() => setCurrentPage("analysis")}
         >
-          {JSON.stringify(data, null, 2)}
-        </pre>
-      )}
+          Analysis
+        </button>
+        <button
+          className={currentPage === "history" ? "active" : ""}
+          onClick={() => setCurrentPage("history")}
+        >
+          History
+        </button>
+      </div>
+
+      <main className="dashboard">
+        {currentPage === "analysis" && (
+          <AnalysisPage
+            analysisStatus={analysisStatus}
+            result={result}
+            error={error}
+          />
+        )}
+        {currentPage === "history" && (
+          <HistoryPage onSelect={handleSelect} />
+        )}
+      </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

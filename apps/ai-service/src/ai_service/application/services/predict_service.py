@@ -30,17 +30,30 @@ PREDICT_STATUS_SUCCESS: Final[str] = "success"
 _ANALYSIS_ID_PATTERN = re.compile(r"^[A-Za-z0-9._-]+$")
 
 
+# [오케스트레이션]
+#
+# 1. path 해석/검증 → uploads 쪽
+# 2. runtime/model 확보 → runtime 쪽
+# 3. 전처리 → preprocessing 쪽
+# 4. 후처리 → postprocess 쪽
+# 5. Grad-CAM 생성 → gradcam_service 쪽
 def run_predict(
     *,
-    analysis_id: str,
-    image_path: str,
-    include_gradcam: bool = False,
-    settings: Settings | None = None,
+    analysis_id     : str,
+    image_path      : str,
+    include_gradcam : bool = False,
+    settings        : Settings | None = None,
 ) -> PredictResult:
-    cfg = settings or get_settings()
+    
+    # apps/ai-service/src/ai_service/infrastructure/settings.py
+    cfg = settings or get_settings() 
+    
+    # analysis_id에 대하여 정규화 & 검증
     normalized_analysis_id = _validate_analysis_id(analysis_id)
 
-    resolved_image_path = resolve_upload_image_path(
+    # 이미지 경로 해석 & 파일 검증
+    # apps/ai-service/src/ai_service/infrastructure/io/uploads.py
+    resolved_image_path = resolve_upload_image_path( 
         image_path=image_path,
         settings=cfg,
     )
@@ -49,23 +62,31 @@ def run_predict(
         settings=cfg,
     )
 
+    # 모델/아티팩트/device/runtime 확보
+    # apps/ai-service/src/ai_service/infrastructure/inference/runtime.py
     runtime = get_inference_runtime(settings=cfg)
 
+    # 전처리: 입력 이미지 -> 모델 입력 tensor로 변환
+    # apps/ai-service/src/ai_service/infrastructure/inference/preprocessing.py
     preprocessed_image = preprocess_image_for_inference(
         image_path=resolved_image_path,
         image_size=runtime.artifacts.image_size,
         device=runtime.device,
     )
 
+    # 모델 추론
     with torch.inference_mode():
         logits = runtime.model(preprocessed_image.image_tensor)
 
+    # logits -> sigmoid -> threshold -> 라벨별 예측 결과
+    # apps/ai-service/src/ai_service/infrastructure/inference/postprocess.py
     label_predictions = build_label_predictions_from_logits(
         logits=logits,
         label_order=runtime.artifacts.label_order,
         thresholds_by_label=runtime.artifacts.thresholds.as_dict(),
     )
 
+    # Grad-CAM 결과 조립
     gradcam = _build_gradcam_result(
         analysis_id=normalized_analysis_id,
         include_gradcam=include_gradcam,
@@ -76,6 +97,7 @@ def run_predict(
         label_predictions=label_predictions,
     )
 
+    # 최종 결과 반환: 
     return PredictResult(
         analysis_id=normalized_analysis_id,
         status=PREDICT_STATUS_SUCCESS,
