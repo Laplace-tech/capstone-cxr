@@ -1,3 +1,5 @@
+// apps/frontend/src/pages/AnalysisPage.jsx
+
 import { useState } from "react";
 import ResultSummary from "../components/result/ResultSummary";
 import DetailResultList from "../components/result/DetailResultList";
@@ -11,12 +13,11 @@ import { useAnalysis } from "../hooks/useAnalysis";
 
 function AnalysisPage() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const { analysisStatus, result, error, startAnalysis, reset } = useAnalysis();
-  const isLoading = ["uploading", "queued", "processing"].includes(analysisStatus);
+  const { analysisStatus, result, error, selectedAnalysisId, isLoading, startAnalysis, reset } = useAnalysis();
 
   function handleAnalyze() {
-    if (!selectedFile) return;
-    startAnalysis(selectedFile);
+    if (!selectedFile || isLoading) return;
+    void startAnalysis(selectedFile);
   }
 
   function handleReset() {
@@ -26,56 +27,87 @@ function AnalysisPage() {
 
   return (
     <div className="analysis-page">
-      <section className="state-card">
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
-          <h2 style={{ margin: 0 }}>X-ray 이미지 업로드</h2>
-          <StatusBadge status={
-            analysisStatus === "uploading"  ? "uploading"  :
-            analysisStatus === "queued"     ? "queued"     :
-            analysisStatus === "processing" ? "processing" :
-            analysisStatus === "completed"  ? "completed"  :
-            analysisStatus === "error"      ? "failed"     : "idle"
-          } />
+      <section className="product-hero">
+        <div>
+          <span className="eyebrow">Chest X-ray Reading Assistant</span>
+          <h2>흉부 X-ray 판독 보조 대시보드</h2>
+          <p>
+            DenseNet121 기반 다중 라벨 예측과 Grad-CAM 시각화를 결합해, 판독자가 확인해야 할 소견과 근거 영역을 한 화면에서 제공합니다.
+          </p>
         </div>
-        <DragAndDropZone onFileSelect={setSelectedFile} />
-        <div style={{ marginTop: "1rem", display: "flex", gap: "8px" }}>
+        <div className="workflow-steps" aria-label="analysis workflow">
+          <span>Upload</span>
+          <span>AI Analysis</span>
+          <span>Clinical Review</span>
+        </div>
+      </section>
+
+      <section className="state-card upload-card product-panel">
+        <div className="upload-card-header">
+          <div>
+            <span className="eyebrow">New Study</span>
+            <h2>X-ray 이미지 업로드</h2>
+            <p>PNG 또는 JPEG 흉부 X-ray 이미지를 업로드하면 AI 분석을 시작합니다.</p>
+          </div>
+          <StatusBadge status={toBadgeStatus(analysisStatus)} />
+        </div>
+
+        <DragAndDropZone onFileSelect={setSelectedFile} disabled={isLoading} />
+
+        <div className="action-row">
           <Button onClick={handleAnalyze} disabled={!selectedFile || isLoading} loading={isLoading}>
             {isLoading ? "분석 중..." : "분석 시작"}
           </Button>
           {analysisStatus !== "idle" && (
-            <Button variant="secondary" onClick={handleReset}>초기화</Button>
+            <Button variant="secondary" onClick={handleReset} disabled={isLoading && analysisStatus === "uploading"}>
+              초기화
+            </Button>
           )}
         </div>
+
+        {selectedAnalysisId && (
+          <p className="analysis-id-text">분석 ID: {selectedAnalysisId}</p>
+        )}
       </section>
 
       {isLoading && (
-        <section className="state-card">
-          <h2>
-            {analysisStatus === "uploading" && "이미지 업로드 중..."}
-            {analysisStatus === "queued" && "분석 대기 중..."}
-            {analysisStatus === "processing" && "AI가 분석 중입니다..."}
-          </h2>
+        <section className="state-card product-panel loading-panel">
+          <h2>{statusMessage(analysisStatus)}</h2>
+          <p>분석이 완료되면 결과 화면이 자동으로 표시됩니다.</p>
           <ResultSkeleton />
         </section>
       )}
 
       {analysisStatus === "error" && (
-        <section className="state-card error-card">
+        <section className="state-card error-card product-panel">
           <h2>오류가 발생했습니다</h2>
           <p>{error}</p>
+          <Button variant="secondary" onClick={handleReset}>다시 시도</Button>
         </section>
       )}
 
       {analysisStatus === "completed" && result && (
-        <>
+        <div className="result-dashboard">
           <ResultSummary result={result} />
-          <DetailResultList details={result.details} />
           <GradCamViewer result={result} />
+          <DetailResultList details={result.details} />
           <InfoSection />
-        </>
+        </div>
       )}
     </div>
   );
+}
+
+function toBadgeStatus(status) {
+  if (status === "error") return "failed";
+  return status || "idle";
+}
+
+function statusMessage(status) {
+  if (status === "uploading") return "이미지 업로드 중...";
+  if (status === "queued") return "분석 대기 중...";
+  if (status === "processing") return "AI가 분석 중입니다...";
+  return "처리 중...";
 }
 
 export default AnalysisPage;

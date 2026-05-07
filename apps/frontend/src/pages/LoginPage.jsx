@@ -200,6 +200,24 @@ export default function LoginPage({ onLogin, onGoSignup }) {
               </>
             )}
           </button>
+
+          <button
+            type="button"
+            onClick={() => onLogin({ email: "demo@hospital.com", role: "DEMO" })}
+            style={{
+              width: "100%",
+              padding: "11px",
+              borderRadius: "10px",
+              background: "#f8fafc",
+              color: "#2563eb",
+              fontSize: "13px",
+              fontWeight: 700,
+              border: "1.5px solid #bfdbfe",
+              cursor: "pointer",
+            }}
+          >
+            시연용으로 바로 시작
+          </button>
         </form>
 
         {/* 회원가입 링크 */}

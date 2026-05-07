@@ -6,7 +6,7 @@ const DEPARTMENTS = [
   "정형외과", "흉부외과", "응급의학과", "마취통증의학과", "기타",
 ];
 
-export default function SingupPage({ onGoLogin }) {
+export default function SignupPage({ onGoLogin }) {
   const [form, setForm] = useState({
     lastName: "",
     firstName: "",

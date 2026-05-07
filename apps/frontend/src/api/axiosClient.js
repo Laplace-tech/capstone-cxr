@@ -1,35 +1,44 @@
+// apps/frontend/src/api/axiosClient.js
+
 import axios from "axios";
+
+const DEFAULT_TIMEOUT_MS = 120000;
 
 const axiosClient = axios.create({
   baseURL: "/api/v1",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  timeout: 30000,
+  timeout: DEFAULT_TIMEOUT_MS,
 });
 
-// ¿äÃ» ÀÎÅÍ¼ÁÅÍ
 axiosClient.interceptors.request.use(
   (config) => {
-    // ÃßÈÄ ÀÎÁõ ÅäÅ« ÁÖÀÔ À§Ä¡
-    // const token = useAuthStore.getState().token;
-    // if (token) config.headers.Authorization = `Bearer ${token}`;
+    // FormData ìš”ì²­ì€ ë¸Œë¼ìš°ì €ê°€ boundaryë¥¼ í¬í•¨í•œ Content-Typeì„ ì§ì ‘ ì¡ê²Œ ë‘”ë‹¤.
+    if (config.data instanceof FormData) {
+      delete config.headers["Content-Type"];
+    }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
-// ÀÀ´ä ÀÎÅÍ¼ÁÅÍ
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response?.status;
-    if (status === 401) {
-      // ÃßÈÄ ·Î±×ÀÎ ÆäÀÌÁö·Î ¸®´ÙÀÌ·ºÆ®
-      console.warn("[axiosClient] ÀÎÁõ ¸¸·á");
-    }
+    const message =
+      error.response?.data?.error?.message ||
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      error.message;
+
+    console.warn("[axiosClient] request failed", {
+      status,
+      message,
+      url: error.config?.url,
+      method: error.config?.method,
+    });
+
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosClient;

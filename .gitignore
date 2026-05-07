@@ -81,3 +81,8 @@ shared/generated/*
 *.log
 tmp/
 temp/
+# Local demo medical images / temporary frontend bundles
+shared/demo_samples/
+shared/uploads/analyses/demo-positive-*/
+frontend-src*.tar.gz
+apps/frontend_before*/

@@ -1,7 +1,9 @@
+// apps/frontend/src/App.jsx
+
 import { useState } from "react";
 import "./App.css";
 import LoginPage from "./pages/LoginPage";
-import SingupPage from "./pages/SignupPage";
+import SignupPage from "./pages/SignupPage";
 import PendingPage from "./pages/PendingPage";
 import AnalysisPage from "./pages/AnalysisPage";
 import HistoryPage from "./pages/HistoryPage";
@@ -10,25 +12,23 @@ import { useAnalysisStore } from "./stores/analysisStore";
 
 function App() {
   const [user, setUser] = useState(null);
-  const [authPage, setAuthPage] = useState("login"); // "login" | "signup" | "pending"
+  const [authPage, setAuthPage] = useState("login");
   const [pendingEmail, setPendingEmail] = useState("");
   const [currentPage, setCurrentPage] = useState("analysis");
 
-  const { analysisStatus, result, error, selectedAnalysisId } = useAnalysis();
-  const setSelectedAnalysisId = useAnalysisStore(
-    (state) => state.setSelectedAnalysisId
-  );
+  const { analysisStatus, selectedAnalysisId, loadExistingResult } = useAnalysis();
+  const setSelectedAnalysisId = useAnalysisStore((state) => state.setSelectedAnalysisId);
 
-  const handleSelect = (id) => {
-    setSelectedAnalysisId(id);
+  function handleSelect(analysisId) {
+    setSelectedAnalysisId(analysisId);
     setCurrentPage("analysis");
-  };
+    void loadExistingResult(analysisId);
+  }
 
-  // 비로그인 상태 → 인증 화면
   if (!user) {
     if (authPage === "signup") {
       return (
-        <SingupPage
+        <SignupPage
           onGoLogin={(state, email) => {
             if (state === "pending") {
               setPendingEmail(email || "");
@@ -40,14 +40,11 @@ function App() {
         />
       );
     }
+
     if (authPage === "pending") {
-      return (
-        <PendingPage
-          email={pendingEmail}
-          onGoLogin={() => setAuthPage("login")}
-        />
-      );
+      return <PendingPage email={pendingEmail} onGoLogin={() => setAuthPage("login")} />;
     }
+
     return (
       <LoginPage
         onLogin={(userData) => setUser(userData)}
@@ -56,39 +53,27 @@ function App() {
     );
   }
 
-  // 로그인 상태 → 대시보드
   return (
     <div className="app">
-      <header className="header">
+      <header className="header app-shell-header">
         <div>
-          <h1>Chest X-ray Analysis Dashboard</h1>
-          <p>AI 판독 결과와 Grad-CAM 시각화를 확인할 수 있습니다.</p>
+          <span className="eyebrow">Capstone CXR</span>
+          <h1>Chest X-ray Reading Assist System</h1>
+          <p>예측 확률, 병변별 설명, Grad-CAM 근거 영상을 함께 제공하는 판독 보조 제품형 프로토타입입니다.</p>
           <p className="selected-id-text">
-            현재 선택된 분석 ID: {selectedAnalysisId}
+            현재 선택된 분석 ID: {selectedAnalysisId || "없음"}
           </p>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <span className={`status-badge ${analysisStatus}`}>
-            {analysisStatus}
-          </span>
-          <button
-            onClick={() => setUser(null)}
-            style={{
-              padding: "6px 14px",
-              borderRadius: "8px",
-              border: "1.5px solid #e2e8f0",
-              background: "white",
-              fontSize: "12px",
-              color: "#64748b",
-              cursor: "pointer",
-            }}
-          >
+
+        <div className="header-actions">
+          <span className={`status-badge ${analysisStatus}`}>{analysisStatus}</span>
+          <button className="logout-button" onClick={() => setUser(null)}>
             로그아웃
           </button>
         </div>
       </header>
 
-      <div className="tab-buttons">
+      <div className="tab-buttons product-tabs">
         <button
           className={currentPage === "analysis" ? "active" : ""}
           onClick={() => setCurrentPage("analysis")}
@@ -104,16 +89,8 @@ function App() {
       </div>
 
       <main className="dashboard">
-        {currentPage === "analysis" && (
-          <AnalysisPage
-            analysisStatus={analysisStatus}
-            result={result}
-            error={error}
-          />
-        )}
-        {currentPage === "history" && (
-          <HistoryPage onSelect={handleSelect} />
-        )}
+        {currentPage === "analysis" && <AnalysisPage />}
+        {currentPage === "history" && <HistoryPage onSelect={handleSelect} />}
       </main>
     </div>
   );
