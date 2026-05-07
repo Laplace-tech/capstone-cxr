@@ -1,197 +1,195 @@
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1a2e1a,18:2d6b4a,42:7ec89a,62:f48fb1,80:f8c8dc,100:fce4ec&height=320&section=header&text=capstone-cxr&fontSize=58&fontColor=f0fff4&fontAlignY=40&animation=fadeIn&desc=Chest%20X-ray%20Assistive%20Service&descSize=18&descAlignY=66" width="100%" />
-</p>
+# MediScope · Chest X-ray Reading Assist System
 
-<div align="center">
-
-<img src="https://readme-typing-svg.demolab.com?font=Dancing+Script&weight=700&size=42&duration=1&pause=99999&color=ffd6e8&center=true&vCenter=true&width=900&lines=AI-Powered+Chest+X-ray+Assistive+Service" />
-
-<img src="https://readme-typing-svg.demolab.com?font=Noto+Serif+KR&weight=700&size=24&duration=1&pause=99999&color=a8dfc0&center=true&vCenter=true&width=980&lines=%EC%9D%98%EB%A3%8C+%EC%98%81%EC%83%81+%EA%B8%B0%EB%B0%98+%EC%A7%84%EB%8B%A8+%EB%B3%B4%EC%A1%B0+%EC%84%9C%EB%B9%84%EC%8A%A4%EB%A5%BC+%EC%9C%84%ED%95%9C+%EC%BA%A1%EC%8A%A4%ED%86%A4+%ED%86%B5%ED%95%A9+%EC%A0%80%EC%9E%A5%EC%86%8C" />
+> DenseNet121 기반 흉부 X-ray 다중 라벨 예측과 Grad-CAM 시각화를 결합한 판독 보조 웹 서비스 프로토타입입니다.
 
 <br />
 
-<img src="https://capsule-render.vercel.app/api?type=rect&color=0:7ec89a,40:f48fb1,60:f48fb1,100:7ec89a&height=2&width=55%25" />
+## Team & Ownership
 
-</div>
-
-<br />
-
----
-
-<br />
-
-<div align="center">
-
-<img src="https://readme-typing-svg.demolab.com?font=Dancing+Script&weight=700&size=46&duration=1&pause=99999&color=f48fb1&center=true&vCenter=true&width=760&lines=%F0%9F%8C%B8+Project+Gallery+%26+Artifacts+%F0%9F%8C%B8" />
-
-<br /><br />
-
-<table align="center">
+<table>
   <tr>
-    <td align="center" width="50%">
-      <img src="docs/assets/architecture/service-architecture.jpg" width="100%" alt="Service Architecture" />
-      <br />
-      <sub><b>Service Architecture</b></sub>
-    </td>
-  </tr>
-</table>
-
-<br />
-
-<table align="center">
-  <tr>
-    <td align="center" width="50%">
-      <img src="docs/assets/screenshots/result-summary-gradcam.png" width="100%" alt="Result Summary and Grad-CAM" />
-      <br />
-      <sub><b>Result Summary & Grad-CAM</b></sub>
-    </td>
-    <td align="center" width="50%">
-      <img src="docs/assets/screenshots/condition-details.png" width="100%" alt="Condition Details" />
-      <br />
-      <sub><b>Condition Details</b></sub>
-    </td>
-  </tr>
-</table>
-
-<br />
-
-<table align="center">
-  <tr>
-    <td align="center" width="260">
-      <a href="docs/research/mediscope-kit-2026-paper.hwp">
-        <img src="https://img.shields.io/badge/Research%20Paper-HWP-fde8f2?style=for-the-badge&logo=readthedocs&logoColor=b5547a&labelColor=f9b8ce" />
-      </a>
-    </td>
-    <td align="center" width="260">
-      <a href="docs/research/mediscope-final-presentation.pptx">
-        <img src="https://img.shields.io/badge/Presentation-PPTX-e6f7ee?style=for-the-badge&logo=microsoftpowerpoint&logoColor=2d6b4a&labelColor=b5dfc8" />
-      </a>
-    </td>
-  </tr>
-</table>
-
-</div>
-
-<br />
-
----
-
-<br />
-
-<div align="center">
-
-<img src="https://readme-typing-svg.demolab.com?font=Dancing+Script&weight=700&size=46&duration=1&pause=99999&color=7ec89a&center=true&vCenter=true&width=600&lines=%F0%9F%8C%B8+Capstone+Team+%F0%9F%8C%B8" />
-
-<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=400&size=18&duration=1&pause=99999&color=a8d5b5&center=true&vCenter=true&width=420&lines=%E2%80%94%E2%80%94%E2%80%94+Spring+2026+%E2%80%94%E2%80%94%E2%80%94" />
-
-<br /><br />
-
-<table align="center">
-  <tr>
-    <td align="center" width="210">
-      <br />
-      <a href="https://github.com/seyeonh">
-        <img src="https://github.com/seyeonh.png" width="90" height="90" alt="손세연" />
-      </a>
-      <br /><br />
-      <b>손세연</b>
-      <br />
-      <sub>Team Member</sub>
-      <br /><br />
-      <a href="https://github.com/seyeonh">
-        <img src="https://img.shields.io/badge/✿%20seyeonh-fde8f2?style=for-the-badge&logo=github&logoColor=b5547a&labelColor=f9b8ce" />
-      </a>
-      <br />
-    </td>
-    <td align="center" width="210">
-      <br />
-      <a href="https://github.com/Laplace-tech">
-        <img src="https://github.com/Laplace-tech.png" width="90" height="90" alt="박용민" />
-      </a>
-      <br /><br />
-      <b>박용민</b>
-      <br />
-      <sub>Team Leader · AI Lead</sub>
-      <br /><br />
-      <a href="https://github.com/Laplace-tech">
-        <img src="https://img.shields.io/badge/✿%20Laplace--tech-e6f7ee?style=for-the-badge&logo=github&logoColor=2d6b4a&labelColor=b5dfc8" />
-      </a>
-      <br />
-    </td>
-    <td align="center" width="210">
-      <br />
-      <a href="https://github.com/HOSUNG-07">
-        <img src="https://github.com/HOSUNG-07.png" width="90" height="90" alt="송호성" />
-      </a>
-      <br /><br />
-      <b>송호성</b>
-      <br />
-      <sub>Backend Lead</sub>
-      <br /><br />
-      <a href="https://github.com/HOSUNG-07">
-        <img src="https://img.shields.io/badge/✿%20HOSUNG--07-fde8f2?style=for-the-badge&logo=github&logoColor=b5547a&labelColor=f9b8ce" />
-      </a>
-      <br />
-    </td>
-  </tr>
-  <tr>
-    <td colspan="3" align="center">
-      <img src="https://capsule-render.vercel.app/api?type=rect&color=0:e8f5e2,40:a8d5b5,60:f8c8dc,100:fce4ec&height=2&width=80%25" />
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="210">
-      <br />
-      <a href="https://github.com/Whale2357">
-        <img src="https://github.com/Whale2357.png" width="90" height="90" alt="이용준" />
-      </a>
-      <br /><br />
-      <b>이용준</b>
-      <br />
-      <sub>Team Member</sub>
-      <br /><br />
-      <a href="https://github.com/Whale2357">
-        <img src="https://img.shields.io/badge/✿%20Whale2357-e6f7ee?style=for-the-badge&logo=github&logoColor=2d6b4a&labelColor=b5dfc8" />
-      </a>
-      <br />
-    </td>
-    <td align="center" width="210">
-      <br />
-      <a href="https://github.com/bagjiwon">
-        <img src="https://github.com/bagjiwon.png" width="90" height="90" alt="박지원" />
-      </a>
-      <br /><br />
-      <b>박지원</b>
-      <br />
-      <sub>Team Member</sub>
-      <br /><br />
-      <a href="https://github.com/bagjiwon">
-        <img src="https://img.shields.io/badge/✿%20bagjiwon-fde8f2?style=for-the-badge&logo=github&logoColor=b5547a&labelColor=f9b8ce" />
-      </a>
-      <br />
-    </td>
-    <td align="center" width="210">
-      <br />
+    <td align="center" width="33%">
       <a href="https://github.com/zuxzae">
-        <img src="https://github.com/zuxzae.png" width="90" height="90" alt="하윤진" />
+        <img src="https://github.com/zuxzae.png" width="88" height="88" alt="하윤진" />
       </a>
-      <br /><br />
-      <b>하윤진</b>
-      <br />
-      <sub>Frontend Lead</sub>
-      <br /><br />
+      <h3>하윤진</h3>
+      <b>Frontend Lead</b><br />
+      <sub>React/Vite UI · Upload Flow · Result Dashboard · Product UX</sub><br /><br />
       <a href="https://github.com/zuxzae">
-        <img src="https://img.shields.io/badge/✿%20zuxzae-e6f7ee?style=for-the-badge&logo=github&logoColor=2d6b4a&labelColor=b5dfc8" />
+        <img src="https://img.shields.io/badge/GitHub-zuxzae-24292f?style=flat-square&logo=github" />
       </a>
-      <br />
+    </td>
+    <td align="center" width="33%">
+      <a href="https://github.com/Laplace-tech">
+        <img src="https://github.com/Laplace-tech.png" width="88" height="88" alt="박용민" />
+      </a>
+      <h3>박용민</h3>
+      <b>Team Leader · AI Lead</b><br />
+      <sub>Project Leadership · DenseNet121 Pipeline · AI Service · Grad-CAM · Experiments</sub><br /><br />
+      <a href="https://github.com/Laplace-tech">
+        <img src="https://img.shields.io/badge/GitHub-Laplace--tech-24292f?style=flat-square&logo=github" />
+      </a>
+    </td>
+    <td align="center" width="33%">
+      <a href="https://github.com/HOSUNG-07">
+        <img src="https://github.com/HOSUNG-07.png" width="88" height="88" alt="송호성" />
+      </a>
+      <h3>송호성</h3>
+      <b>Backend Lead</b><br />
+      <sub>Spring Boot API · Analysis Lifecycle · DB/API Integration · AI Service Bridge</sub><br /><br />
+      <a href="https://github.com/HOSUNG-07">
+        <img src="https://img.shields.io/badge/GitHub-HOSUNG--07-24292f?style=flat-square&logo=github" />
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="33%">
+      <a href="https://github.com/Whale2357">
+        <img src="https://github.com/Whale2357.png" width="72" height="72" alt="이용준" />
+      </a>
+      <h3>이용준</h3>
+      <b>Backend / Integration Contributor</b><br />
+      <sub>Backend Feature Support · Integration Testing</sub><br /><br />
+      <a href="https://github.com/Whale2357">
+        <img src="https://img.shields.io/badge/GitHub-Whale2357-6b7280?style=flat-square&logo=github" />
+      </a>
+    </td>
+    <td align="center" width="33%">
+      <a href="https://github.com/bagjiwon">
+        <img src="https://github.com/bagjiwon.png" width="72" height="72" alt="박지원" />
+      </a>
+      <h3>박지원</h3>
+      <b>AI / Research Contributor</b><br />
+      <sub>Model Experiment Support · Paper/Evaluation Support</sub><br /><br />
+      <a href="https://github.com/bagjiwon">
+        <img src="https://img.shields.io/badge/GitHub-bagjiwon-6b7280?style=flat-square&logo=github" />
+      </a>
+    </td>
+    <td align="center" width="33%">
+      <a href="https://github.com/seyeonh">
+        <img src="https://github.com/seyeonh.png" width="72" height="72" alt="손세연" />
+      </a>
+      <h3>손세연</h3>
+      <b>Frontend / Product Contributor</b><br />
+      <sub>UI Support · Product Documentation · Presentation Assets</sub><br /><br />
+      <a href="https://github.com/seyeonh">
+        <img src="https://img.shields.io/badge/GitHub-seyeonh-6b7280?style=flat-square&logo=github" />
+      </a>
     </td>
   </tr>
 </table>
 
-</div>
+<br />
+
+## Project Snapshot
+
+| Area | Description |
+|---|---|
+| Service | Chest X-ray reading assistance prototype |
+| Model | DenseNet121 multi-label classifier |
+| Explainability | Grad-CAM evidence map |
+| Target Findings | Atelectasis, Cardiomegaly, Consolidation, Edema, Pleural Effusion |
+| Stack | React/Vite · Spring Boot · FastAPI · PostgreSQL · Docker Compose |
 
 <br />
+
+## System Architecture
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:fce4ec,22:f8c8dc,48:f48fb1,68:7ec89a,85:2d6b4a,100:1a2e1a&height=200&section=footer" width="100%" />
+  <img src="docs/assets/architecture/service-architecture.jpg" alt="MediScope service architecture" width="900" />
 </p>
+
+<br />
+
+## Product Screenshots
+
+### Result Summary & Grad-CAM
+
+<p align="center">
+  <img src="docs/assets/screenshots/result-summary-gradcam.png" alt="Result summary and Grad-CAM visualization" width="900" />
+</p>
+
+### Condition Details
+
+<p align="center">
+  <img src="docs/assets/screenshots/condition-details.png" alt="Condition-wise interpretation dashboard" width="900" />
+</p>
+
+<br />
+
+## Research Artifacts
+
+| Type | File |
+|---|---|
+| Paper | [`docs/research/mediscope-kit-2026-paper.hwp`](docs/research/mediscope-kit-2026-paper.hwp) |
+| Presentation | [`docs/research/mediscope-final-presentation.pptx`](docs/research/mediscope-final-presentation.pptx) |
+
+<br />
+
+## Repository Structure
+
+```text
+capstone-cxr/
+├── apps/
+│   ├── frontend/        # React/Vite client
+│   ├── backend/         # Spring Boot API server
+│   └── ai-service/      # FastAPI inference service
+├── docs/
+│   ├── api/
+│   ├── assets/
+│   ├── product/
+│   └── research/
+├── infra/compose/       # Docker Compose
+├── shared/              # local uploads/generated artifacts
+└── README.md
+```
+
+<br />
+
+## Run Locally
+
+```bash
+cd ~/projects/capstone-cxr
+
+docker compose -f infra/compose/docker-compose.dev.yml up -d
+```
+
+Health check:
+
+```bash
+curl -i http://localhost:8000/health
+curl -i http://localhost:8000/version
+curl -i http://localhost:8080/api/hello
+curl -I http://localhost:5173
+```
+
+Frontend:
+
+```text
+http://localhost:5173
+```
+
+<br />
+
+## Development Mode
+
+For frontend-heavy work, keep backend/AI/database in Docker and run the frontend locally.
+
+```bash
+cd ~/projects/capstone-cxr
+
+docker compose -f infra/compose/docker-compose.dev.yml up -d postgres backend ai-service
+```
+
+```bash
+cd apps/frontend
+npm install
+npm run dev
+```
+
+<br />
+
+## Notice
+
+This repository is an academic capstone and research prototype. It is not intended for autonomous clinical diagnosis.
+
