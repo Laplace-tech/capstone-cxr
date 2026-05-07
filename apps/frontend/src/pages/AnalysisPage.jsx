@@ -1,14 +1,14 @@
 // apps/frontend/src/pages/AnalysisPage.jsx
 
 import { useState } from "react";
-import ResultSummary from "../components/result/ResultSummary";
+import Button from "../components/common/Button";
+import { ResultSkeleton } from "../components/common/Skeleton";
+import StatusBadge from "../components/common/StatusBadge";
 import DetailResultList from "../components/result/DetailResultList";
 import GradCamViewer from "../components/result/GradCamViewer";
 import InfoSection from "../components/result/InfoSection";
+import ResultSummary from "../components/result/ResultSummary";
 import DragAndDropZone from "../components/upload/DragAndDropZone";
-import Button from "../components/common/Button";
-import StatusBadge from "../components/common/StatusBadge";
-import { ResultSkeleton } from "../components/common/Skeleton";
 import { useAnalysis } from "../hooks/useAnalysis";
 
 function AnalysisPage() {
@@ -32,7 +32,7 @@ function AnalysisPage() {
           <span className="eyebrow">Chest X-ray Reading Assistant</span>
           <h2>흉부 X-ray 판독 보조 대시보드</h2>
           <p>
-            DenseNet121 기반 다중 라벨 예측과 Grad-CAM 시각화를 결합해, 판독자가 확인해야 할 소견과 근거 영역을 한 화면에서 제공합니다.
+            DenseNet121 기반 다중 라벨 예측, 병변별 설명, Grad-CAM 근거 영상을 결합해 판독 검토 흐름을 한 화면에 정리합니다.
           </p>
         </div>
         <div className="workflow-steps" aria-label="analysis workflow">
@@ -65,13 +65,11 @@ function AnalysisPage() {
           )}
         </div>
 
-        {selectedAnalysisId && (
-          <p className="analysis-id-text">분석 ID: {selectedAnalysisId}</p>
-        )}
+        {selectedAnalysisId && <p className="analysis-id-text">분석 ID: {selectedAnalysisId}</p>}
       </section>
 
       {isLoading && (
-        <section className="state-card product-panel loading-panel">
+        <section className="state-card product-panel loading-panel" aria-live="polite">
           <h2>{statusMessage(analysisStatus)}</h2>
           <p>분석이 완료되면 결과 화면이 자동으로 표시됩니다.</p>
           <ResultSkeleton />
@@ -79,10 +77,12 @@ function AnalysisPage() {
       )}
 
       {analysisStatus === "error" && (
-        <section className="state-card error-card product-panel">
+        <section className="state-card error-card product-panel" aria-live="polite">
           <h2>오류가 발생했습니다</h2>
           <p>{error}</p>
-          <Button variant="secondary" onClick={handleReset}>다시 시도</Button>
+          <Button variant="secondary" onClick={handleReset}>
+            다시 시도
+          </Button>
         </section>
       )}
 

@@ -1038,3 +1038,195 @@ button {
     padding: 32px 18px;
   }
 }
+
+/* Senior product refactor: readability, spacing, and maintainable result cards */
+:root {
+  --cxr-surface: rgba(255, 255, 255, 0.96);
+  --cxr-border: #dbe4ef;
+  --cxr-text: #0f172a;
+  --cxr-muted: #64748b;
+  --cxr-primary: #1d4ed8;
+  --cxr-primary-soft: #eff6ff;
+  --cxr-danger: #be123c;
+  --cxr-success: #047857;
+}
+
+.summary-title-row {
+  align-items: flex-start;
+}
+
+.summary-hero-card,
+.summary-item,
+.condition-card,
+.viewer-card {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.summary-hero-card:hover,
+.summary-item:hover,
+.condition-card:hover,
+.viewer-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 55px rgba(15, 23, 42, 0.08);
+}
+
+.summary-hero-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 142px;
+}
+
+.top-finding-card {
+  gap: 8px;
+}
+
+.top-finding-name {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.top-finding-name strong {
+  display: block;
+  color: var(--cxr-text);
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+}
+
+.top-finding-name span {
+  display: block;
+  color: var(--cxr-muted);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.summary-item {
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.summary-item-wide .summary-value {
+  max-width: 100%;
+  line-height: 1.45;
+}
+
+.condition-card {
+  align-items: stretch;
+}
+
+.condition-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.condition-name-block {
+  min-width: 0;
+}
+
+.condition-name-block h4 {
+  overflow-wrap: anywhere;
+}
+
+.condition-score-block {
+  flex-shrink: 0;
+}
+
+.risk-pill {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.risk-pill.high {
+  background: #ffe4e6;
+  color: #be123c;
+}
+
+.risk-pill.medium {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.risk-pill.watch {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.risk-pill.low {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.condition-explanation dl {
+  grid-template-columns: 1fr;
+}
+
+.condition-explanation dt {
+  letter-spacing: 0.03em;
+}
+
+.viewer-section.product-panel {
+  padding: 0;
+}
+
+.image-product-card {
+  min-width: 0;
+}
+
+.viewer-header h3 {
+  line-height: 1.25;
+}
+
+.medical-image-frame img {
+  background: #0b1220;
+}
+
+button:focus-visible,
+a:focus-visible,
+.upload-zone:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.35);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1200px) {
+  .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .summary-item-wide {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 760px) {
+  .summary-title-row,
+  .section-title-row,
+  .upload-card-header,
+  .viewer-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .summary-grid,
+  .summary-hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .condition-card {
+    padding: 16px;
+  }
+
+  .condition-score-block {
+    text-align: left;
+  }
+}

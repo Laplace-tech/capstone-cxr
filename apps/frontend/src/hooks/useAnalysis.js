@@ -1,7 +1,9 @@
 // apps/frontend/src/hooks/useAnalysis.js
 
 import { useCallback, useEffect, useRef } from "react";
-import axiosClient from "../api/axiosClient";
+import { createAnalysis, getAnalysisResult, getAnalysisStatus } from "../api/analysisApi";
+import { normalizeAnalysisResult } from "../domain/analysisResultMapper";
+import { normalizeStatus, toUserMessage } from "../domain/formatters";
 import { useAnalysisStore } from "../stores/analysisStore";
 
 const POLL_INTERVAL_MS = 1500;
@@ -26,18 +28,17 @@ export function useAnalysis() {
   const startedAtRef = useRef(null);
 
   const stopPolling = useCallback(() => {
-    if (pollingRef.current) {
-      clearInterval(pollingRef.current);
-      pollingRef.current = null;
-    }
+    if (!pollingRef.current) return;
+    clearInterval(pollingRef.current);
+    pollingRef.current = null;
   }, []);
 
   useEffect(() => stopPolling, [stopPolling]);
 
-  const fetchResult = useCallback(
+  const completeWithResult = useCallback(
     async (analysisId) => {
       try {
-        const { data } = await axiosClient.get(`/analyses/${analysisId}/result`);
+        const data = await getAnalysisResult(analysisId);
         const normalized = normalizeAnalysisResult(data, analysisId);
 
         setResult(normalized);
@@ -69,16 +70,16 @@ export function useAnalysis() {
       }
 
       try {
-        const { data } = await axiosClient.get(`/analyses/${analysisId}`);
+        const data = await getAnalysisStatus(analysisId);
         const status = normalizeStatus(data?.status);
 
         if (status === "completed") {
           setAnalysisStatus("processing");
-          await fetchResult(analysisId);
+          await completeWithResult(analysisId);
           return;
         }
 
-        if (status === "failed" || status === "error") {
+        if (["failed", "error"].includes(status)) {
           setAnalysisStatus("error");
           setError(data?.error || data?.message || "AI 분석에 실패했습니다.");
           stopPolling();
@@ -94,12 +95,12 @@ export function useAnalysis() {
 
         setAnalysisStatus(status);
       } catch (error) {
-        // 일시적인 네트워크 오류는 polling을 유지한다. 단, 사용자는 처리 중 상태를 보게 한다.
+        // 일시적인 네트워크 오류는 polling을 유지한다.
         console.warn("[useAnalysis] polling failed", error);
         setAnalysisStatus((current) => (LOADING_STATUSES.has(current) ? current : "processing"));
       }
     },
-    [fetchResult, setAnalysisStatus, setError, stopPolling],
+    [completeWithResult, setAnalysisStatus, setError, stopPolling],
   );
 
   const startPolling = useCallback(
@@ -127,10 +128,7 @@ export function useAnalysis() {
       setResult(null);
 
       try {
-        const formData = new FormData();
-        formData.append("image", file);
-
-        const { data } = await axiosClient.post("/analyses", formData);
+        const data = await createAnalysis(file);
         const analysisId = data?.analysisId || data?.analysis_id || data?.id;
 
         if (!analysisId) {
@@ -155,9 +153,9 @@ export function useAnalysis() {
       setSelectedAnalysisId(analysisId);
       setAnalysisStatus("processing");
       setError("");
-      await fetchResult(analysisId);
+      await completeWithResult(analysisId);
     },
-    [fetchResult, setAnalysisStatus, setError, setSelectedAnalysisId, stopPolling],
+    [completeWithResult, setAnalysisStatus, setError, setSelectedAnalysisId, stopPolling],
   );
 
   const reset = useCallback(() => {
@@ -179,103 +177,4 @@ export function useAnalysis() {
     loadExistingResult,
     reset,
   };
-}
-
-function normalizeAnalysisResult(data, fallbackId) {
-  const analysisId = data?.analysisId || data?.analysis_id || data?.id || fallbackId;
-  const rawLabels = data?.labels || data?.predictions || data?.results || [];
-  const details = rawLabels.map(normalizeLabelResult);
-  const positiveLabels = details
-    .filter((item) => item.predicted)
-    .map((item) => item.name);
-
-  const gradcamAvailable = Boolean(
-    data?.gradcam?.available ??
-      data?.gradCam?.available ??
-      data?.gradcamAvailable ??
-      data?.grad_cam_available ??
-      data?.gradcamUrl ??
-      data?.gradCamUrl,
-  );
-
-  const cacheKey = Date.now();
-
-  return {
-    id: analysisId,
-    status: normalizeStatus(data?.status || "completed"),
-    modelVersion: data?.modelVersion || data?.model_version || "-",
-    thresholdVersion: data?.thresholdVersion || data?.threshold_version || "-",
-    predictionSummary: {
-      positiveLabels,
-      positiveCount: positiveLabels.length,
-      totalCount: details.length,
-    },
-    details,
-    originalImage: analysisId ? `/api/v1/files/${analysisId}/original?t=${cacheKey}` : "",
-    gradCamUrl:
-      analysisId && gradcamAvailable
-        ? `/api/v1/files/${analysisId}/gradcam?t=${cacheKey}`
-        : "",
-    raw: data,
-  };
-}
-
-function normalizeLabelResult(item) {
-  const name = item?.name || item?.label || item?.className || item?.condition || "Unknown";
-  const probability = normalizeProbability(
-    item?.probability ?? item?.prob ?? item?.score ?? item?.value ?? 0,
-  );
-  const threshold = normalizeProbability(item?.threshold ?? item?.cutoff ?? 0.5);
-  const predicted = normalizePrediction(item, probability, threshold);
-
-  return {
-    name,
-    probability,
-    threshold,
-    predicted,
-    result: predicted ? "POSITIVE" : "NEGATIVE",
-  };
-}
-
-function normalizeProbability(value) {
-  const numeric = Number(value);
-  if (!Number.isFinite(numeric)) return 0;
-  if (numeric > 1) return clamp(numeric / 100, 0, 1);
-  return clamp(numeric, 0, 1);
-}
-
-function normalizePrediction(item, probability, threshold) {
-  if (typeof item?.prediction === "boolean") return item.prediction;
-  if (typeof item?.predicted === "boolean") return item.predicted;
-  if (typeof item?.isPositive === "boolean") return item.isPositive;
-
-  const text = String(item?.prediction ?? item?.result ?? item?.status ?? "").toLowerCase();
-  if (["positive", "pos", "1", "true"].includes(text)) return true;
-  if (["negative", "neg", "0", "false"].includes(text)) return false;
-
-  return probability >= threshold;
-}
-
-function normalizeStatus(status) {
-  const value = String(status || "idle").toLowerCase();
-  if (value === "success" || value === "done") return "completed";
-  if (value === "failure") return "failed";
-  if (["idle", "uploading", "queued", "processing", "completed", "failed", "error", "not_found"].includes(value)) {
-    return value;
-  }
-  return "processing";
-}
-
-function toUserMessage(error, fallback) {
-  return (
-    error?.response?.data?.error?.message ||
-    error?.response?.data?.message ||
-    error?.response?.data?.error ||
-    error?.message ||
-    fallback
-  );
-}
-
-function clamp(value, min, max) {
-  return Math.min(Math.max(value, min), max);
 }

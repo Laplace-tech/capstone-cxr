@@ -2,14 +2,19 @@
 
 import { create } from "zustand";
 
-export const useAnalysisStore = create((set) => ({
+const initialState = {
   analysisStatus: "idle",
   result: null,
   error: "",
   selectedAnalysisId: "",
+};
 
-  setAnalysisStatus: (status) => set({ analysisStatus: status }),
+export const useAnalysisStore = create((set) => ({
+  ...initialState,
+
+  setAnalysisStatus: (status) => set({ analysisStatus: status || "idle" }),
   setResult: (result) => set({ result }),
-  setError: (error) => set({ error }),
+  setError: (error) => set({ error: error || "" }),
   setSelectedAnalysisId: (id) => set({ selectedAnalysisId: id || "" }),
+  resetAnalysisState: () => set(initialState),
 }));
