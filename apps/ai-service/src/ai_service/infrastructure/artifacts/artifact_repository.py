@@ -10,40 +10,52 @@ from ai_service.common.exceptions import InternalServerError, NotFoundError
 from ai_service.infrastructure.settings import Settings, get_settings
 
 
-# threshold 묶음 전용 값 객체
 @dataclass(frozen=True, slots=True)
 class ThresholdSet:
-    # version     : threshold 파일/기준 버전명
-    # label_order : threshold 값이 대응하는 label 순서
-    # values      : label_order와 같은 순서의 threshold 값들
+    """
+    threshold 정보를 담는 값 객체.
+
+    - version: threshold 기준 버전명
+    - label_order: threshold 값이 대응하는 label 순서
+    - values: label_order와 동일한 순서의 threshold 값
+    """
     version: str
     label_order: tuple[str, ...]
     values: tuple[float, ...]
 
-    # tuble 기반 threshold 정보를 {"Atelectasis": 0.46, ...} 같은 dict 형태로 바꿔줌
     def as_dict(self) -> dict[str, float]:
+        """
+        threshold 정보를 {"Atelectasis": 0.46, ...} 형태로 변환한다.
+        """
         return dict(zip(self.label_order, self.values, strict=True))
 
 
-# 서비스 추론에 필요한 핵심 아티팩트를 한 번에 담는 값 객체
 @dataclass(frozen=True, slots=True)
 class InferenceArtifacts:
+    """
+    서비스 추론에 필요한 핵심 아티팩트 묶음.
+    """
     checkpoint_path: Path        # 모델 가중치 파일 경로
-    config_snapshot_path: Path   # 학습/추론 설정 스냅샷 JSON
-    thresholds_path: Path        # threshold JSON 파일
-    model_version: str           # 외부 응답에 내려줄 모델 버전 문자열
-    image_size: int              # 전처리/입력 크기 
-    label_order: tuple[str, ...] # 레이블 순서
-    thresholds: ThresholdSet     # ThresholdSet 값 객체
+    config_snapshot_path: Path   # 설정 스냅샷 JSON 경로
+    thresholds_path: Path        # threshold JSON 경로
+    model_version: str           # 외부 응답에 포함할 모델 버전
+    image_size: int              # 입력 이미지 크기
+    label_order: tuple[str, ...] # 서비스 기준 label 순서
+    thresholds: ThresholdSet     # threshold 값 객체
 
 
-# settings를 기반으로 artifacts/checkpoints 아래의 파일들을 읽고
-# 추론에 필요한 메타데이터를 정규화하는 저장소 계층
 class ArtifactRepository:
+    """
+    settings를 기준으로 추론 아티팩트를 읽고 정규화하는 저장소 계층.
+    """
+
     def __init__(self, settings: Settings | None = None) -> None:
         self._settings = settings or get_settings()
 
     def load_inference_artifacts(self) -> InferenceArtifacts:
+        """
+        추론에 필요한 아티팩트를 로드하고 정규화된 값 객체로 반환한다.
+        """
         checkpoint_path = self._get_checkpoint_path()
         config_snapshot_path = self._get_config_snapshot_path()
         thresholds_path = self._get_thresholds_path()
@@ -67,7 +79,10 @@ class ArtifactRepository:
             thresholds_data=thresholds_data,
             label_order=label_order,
         )
-        threshold_version = self._resolve_threshold_version(thresholds_data, thresholds_path)
+        threshold_version = self._resolve_threshold_version(
+            thresholds_data,
+            thresholds_path,
+        )
         model_version = self._resolve_model_version(config_data, checkpoint_path)
         image_size = self._resolve_image_size(config_data)
 
@@ -88,15 +103,27 @@ class ArtifactRepository:
         )
 
     def load_label_order(self) -> tuple[str, ...]:
+        """
+        추론 기준 label 순서를 반환한다.
+        """
         return self.load_inference_artifacts().label_order
 
     def load_threshold_map(self) -> dict[str, float]:
+        """
+        threshold 정보를 label -> threshold dict 형태로 반환한다.
+        """
         return self.load_inference_artifacts().thresholds.as_dict()
 
     def load_checkpoint_path(self) -> Path:
+        """
+        추론에 사용할 checkpoint 경로를 반환한다.
+        """
         return self.load_inference_artifacts().checkpoint_path
 
     def _get_checkpoint_path(self) -> Path:
+        """
+        checkpoint 경로를 결정하고, 실제 파일 존재 여부를 검증한다.
+        """
         checkpoint_path = getattr(self._settings, "checkpoint_path", None)
         if checkpoint_path is None:
             checkpoint_path = self._settings.checkpoints_dir / "best.pt"
@@ -108,6 +135,9 @@ class ArtifactRepository:
         )
 
     def _get_config_snapshot_path(self) -> Path:
+        """
+        config snapshot 경로를 결정하고, 실제 파일 존재 여부를 검증한다.
+        """
         config_snapshot_path = getattr(self._settings, "config_snapshot_path", None)
         if config_snapshot_path is None:
             config_snapshot_path = self._settings.checkpoints_dir / "config_snapshot.json"
@@ -119,6 +149,9 @@ class ArtifactRepository:
         )
 
     def _get_thresholds_path(self) -> Path:
+        """
+        thresholds 파일 경로를 결정하고, 실제 파일 존재 여부를 검증한다.
+        """
         thresholds_path = getattr(self._settings, "thresholds_path", None)
         if thresholds_path is None:
             thresholds_path = self._settings.checkpoints_dir / "infer_thresholds.json"
@@ -136,6 +169,9 @@ class ArtifactRepository:
         missing_code: str,
         invalid_code: str,
     ) -> dict[str, Any]:
+        """
+        JSON 파일을 읽고, 최상위가 dict인지 검증한다.
+        """
         self._require_file(
             path,
             code=missing_code,
@@ -169,6 +205,9 @@ class ArtifactRepository:
         config_data: dict[str, Any],
         checkpoint_path: Path,
     ) -> str:
+        """
+        config snapshot 또는 checkpoint 이름에서 모델 버전을 추론한다.
+        """
         candidate_values = [
             config_data.get("model_version"),
             config_data.get("run_name"),
@@ -184,6 +223,9 @@ class ArtifactRepository:
         return checkpoint_path.stem
 
     def _resolve_image_size(self, config_data: dict[str, Any]) -> int:
+        """
+        config snapshot에서 image_size를 추론한다.
+        """
         candidate_values = [
             config_data.get("image_size"),
             self._get_nested(config_data, "data", "image_size"),
@@ -206,6 +248,9 @@ class ArtifactRepository:
         config_data: dict[str, Any],
         thresholds_data: dict[str, Any],
     ) -> tuple[str, ...]:
+        """
+        thresholds 또는 config snapshot에서 label 순서를 추론한다.
+        """
         candidate_lists = [
             thresholds_data.get("label_order"),
             thresholds_data.get("labels"),
@@ -235,6 +280,9 @@ class ArtifactRepository:
         thresholds_data: dict[str, Any],
         label_order: tuple[str, ...],
     ) -> tuple[float, ...]:
+        """
+        threshold 값을 label_order 기준 tuple 형태로 정규화한다.
+        """
         thresholds_list = thresholds_data.get("thresholds")
         if isinstance(thresholds_list, list):
             values = self._normalize_float_list(thresholds_list)
@@ -269,6 +317,9 @@ class ArtifactRepository:
         thresholds_data: dict[str, Any],
         thresholds_path: Path,
     ) -> str:
+        """
+        thresholds JSON 또는 파일명에서 threshold 버전을 추론한다.
+        """
         candidate_values = [
             thresholds_data.get("threshold_version"),
             thresholds_data.get("version"),
@@ -287,6 +338,9 @@ class ArtifactRepository:
         thresholds_map: dict[str, Any],
         label_order: tuple[str, ...],
     ) -> tuple[float, ...]:
+        """
+        label 기반 mapping을 label_order 기준 tuple로 변환한다.
+        """
         values: list[float] = []
 
         for label_name in label_order:
@@ -306,6 +360,9 @@ class ArtifactRepository:
         return tuple(values)
 
     def _normalize_string_list(self, value: Any) -> tuple[str, ...]:
+        """
+        문자열 리스트를 검증하고 tuple[str, ...]로 정규화한다.
+        """
         if not isinstance(value, list):
             return ()
 
@@ -321,6 +378,9 @@ class ArtifactRepository:
         return tuple(normalized)
 
     def _normalize_float_list(self, value: list[Any]) -> tuple[float, ...]:
+        """
+        숫자 리스트를 tuple[float, ...]로 정규화한다.
+        """
         normalized: list[float] = []
 
         for item in value:
@@ -340,6 +400,9 @@ class ArtifactRepository:
         code: str,
         message: str,
     ) -> Path:
+        """
+        파일 존재 여부를 검증하고, 유효하면 경로를 반환한다.
+        """
         if not path.exists() or not path.is_file():
             raise NotFoundError(
                 code=code,
@@ -349,6 +412,9 @@ class ArtifactRepository:
         return path
 
     def _get_nested(self, data: dict[str, Any], *keys: str) -> Any:
+        """
+        중첩 dict에서 안전하게 값을 꺼낸다.
+        """
         current: Any = data
 
         for key in keys:

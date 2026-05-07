@@ -12,30 +12,33 @@ from typing import Any, Sequence
 
 from ai_service.infrastructure.settings import Settings, get_settings
 
-# startup 검증이 끝난 뒤 앱이 재사용할 수 있는 결과 묶음
+
+# startup 검증이 끝난 뒤, 그 결과를 묶어서 반환하는 객체
 @dataclass(frozen=True, slots=True)
 class StartupValidationResult:
-
     settings: Settings
     threshold_label_order: tuple[str, ...]
         
-        
+
+# startup.py의 메인 엔트리
+# : 사실상 이 파일의 public API는 이 함수 하나
 def validate_startup(
     settings: Settings | None = None,
     *,
     expected_label_order: Sequence[str] | None = None,
 ) -> StartupValidationResult:
     """
-    서비스 시작 시 필요한 모든 기본 검증을 수행한다.
+    서비스 시작 전에 운영에 필요한 최소 전제조건을 한 번에 검증한다.
 
-    검증 범위:
-    - shared 디렉터리 레이아웃
-    - uploads / generated 디렉터리 준비
-    - artifacts / checkpoints 존재
-    - best.pt / infer_thresholds.json / config_snapshot.json 존재
-    - thresholds JSON 파싱 가능 여부
-    - threshold label order와 기대 label order 일치 여부
+    검증 대상:
+    1) shared 경로 구조가 올바른지
+    2) uploads/generated 디렉터리가 준비됐는지
+    3) artifacts/checkpoints와 핵심 파일이 존재하는지
+    4) thresholds/config JSON이 읽히는지
+    5) thresholds의 label order가 서비스 기대 label order와 일치하는지
     """
+    
+    # 현재 검증에 사용할 설정 객체를 확정함
     current_settings = settings or get_settings()
 
     # 1) shared 레이아웃 검증
