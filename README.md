@@ -60,7 +60,7 @@
 
 ## MediScope · Chest X-ray Reading Assist System
 
-DenseNet121 기반 흉부 X-ray 다중 라벨 예측과 Grad-CAM 시각화를 결합한 판독 보조 웹 서비스 프로토타입
+DenseNet121 기반 흉부 X-ray 다중 라벨 예측과 Grad-CAM 시각화를 결합한 흉부 X-ray 판독 보조 웹 서비스
 
 <br />
 
@@ -86,7 +86,7 @@ DenseNet121 기반 흉부 X-ray 다중 라벨 예측과 Grad-CAM 시각화를 �
 
 | Area | Description |
 |---|---|
-| Service | Chest X-ray reading assistance prototype |
+| Service | Chest X-ray reading assistance system |
 | Model | DenseNet121 multi-label classifier |
 | Explainability | Grad-CAM evidence map |
 | Target Findings | Atelectasis, Cardiomegaly, Consolidation, Edema, Pleural Effusion |
@@ -106,7 +106,7 @@ This project is split into two repositories with different responsibilities.
 | [`CheXpert`](https://github.com/Laplace-tech/CheXpert) | Research / Model PoC Repository | CheXpert-small 기반 DenseNet121 학습, 평가, threshold tuning, Grad-CAM 실험 레포 |
 
 `CheXpert` is the research and experiment repository where the model pipeline was trained and evaluated.  
-`capstone-cxr` is the service repository where the selected model artifacts and inference flow are integrated into a web-based reading assistance prototype.
+`capstone-cxr` is the service repository where the selected model artifacts and inference flow are integrated into a web-based reading assistance system.
 
 ```text
 CheXpert
@@ -125,7 +125,7 @@ capstone-cxr
 ```
 
 > The two repositories are separated for clarity:  
-> **CheXpert = research evidence**, **capstone-cxr = productized service prototype**.
+> **CheXpert = research evidence**, **capstone-cxr = service implementation**.
 
 <br />
 
@@ -140,7 +140,7 @@ capstone-cxr
 ## Web Demo
 
 <p align="center">
-  <img src="docs/assets/web/web-demo-worklist-overview.png" alt="MediScope web demo worklist overview" width="940" />
+  <img src="docs/assets/web/mediscope-worklist-dashboard-overview.png" alt="MediScope worklist dashboard overview" width="940" />
 </p>
 
 <p align="center">
@@ -149,9 +149,9 @@ capstone-cxr
 
 <div align="center">
 
-[![Analysis Summary](https://img.shields.io/badge/Analysis%20Summary-Evidence%20Map-2f6fed?style=for-the-badge)](docs/assets/web/web-demo-analysis-summary.png)
-[![Analysis Detail](https://img.shields.io/badge/Analysis%20Detail-Full%20Report-8B5CF6?style=for-the-badge)](docs/assets/web/web-demo-analysis-detail-full.png)
-[![Selected Study](https://img.shields.io/badge/Selected%20Study-Worklist%20View-7ec89a?style=for-the-badge)](docs/assets/web/web-demo-worklist-selected-study.png)
+[![Analysis Summary](https://img.shields.io/badge/Analysis%20Summary-Evidence%20Map-2f6fed?style=for-the-badge)](docs/assets/web/mediscope-analysis-summary-evidence-map.png)
+[![Analysis Detail](https://img.shields.io/badge/Analysis%20Detail-Full%20Report-8B5CF6?style=for-the-badge)](docs/assets/web/mediscope-full-analysis-detail.png)
+[![Selected Study](https://img.shields.io/badge/Selected%20Study-Worklist%20View-7ec89a?style=for-the-badge)](docs/assets/web/mediscope-case-worklist-selected-study.png)
 
 </div>
 
@@ -214,10 +214,9 @@ capstone-cxr/
 │   ├── api/
 │   ├── assets/
 │   │   ├── architecture/
-│   │   ├── readme/
+│   │   ├── presentation/
 │   │   ├── research/
-│   │   └── screenshots/
-│   ├── presentation/
+│   │   └── web/
 │   ├── product/
 │   └── research/
 ├── infra/compose/       # Docker Compose
@@ -273,7 +272,7 @@ npm run dev
 
 ## Notice
 
-This repository is an academic capstone and research prototype. It is not intended for autonomous clinical diagnosis.
+This repository is an academic capstone project for chest X-ray reading assistance. It is not intended for autonomous clinical diagnosis.
 
 <br />
 
