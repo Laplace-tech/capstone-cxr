@@ -15,7 +15,7 @@ function DetailResultList({ details = [] }) {
     return (
       <section className="result-card product-panel">
         <h3>질환별 상세 결과</h3>
-        <div className="empty-state">표시할 예측 결과가 없습니다.</div>
+        <div className="empty-state">표시할 예측 결과 없음</div>
       </section>
     );
   }
@@ -27,7 +27,7 @@ function DetailResultList({ details = [] }) {
           <span className="eyebrow">Condition Details</span>
           <h3 id="condition-detail-title">질환별 상세 결과와 해석</h3>
           <p>
-            확률은 모델 출력값이며, threshold 이상이면 양성으로 표시됩니다. 각 설명은 결과를 이해하기 위한 보조 정보입니다.
+            확률은 모델 출력값, threshold 이상이면 양성으로 표시. 각 설명은 결과 이해를 위한 보조 정보
           </p>
         </div>
       </div>

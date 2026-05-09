@@ -85,7 +85,7 @@ export function getConditionInfo(label) {
     clinicalMeaning: "추가 설명이 필요한 항목입니다.",
     xrayHint: "원본 영상과 모델 결과를 함께 확인해야 합니다.",
     reviewGuide: "AI 결과는 참고 정보이며, 최종 판단은 의료 전문가의 판독이 필요합니다.",
-    caution: "데모용 설명 정보가 부족한 항목입니다.",
+    caution: "설명 정보가 부족한 항목입니다.",
   };
 }
 
