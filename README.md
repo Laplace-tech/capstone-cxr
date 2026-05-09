@@ -139,15 +139,21 @@ capstone-cxr
 
 ## Web Demo
 
+<p align="center">
+  <img src="docs/assets/web/web-demo-worklist-overview.png" alt="MediScope web demo worklist overview" width="940" />
+</p>
+
+<p align="center">
+  <sub>Main web demonstration screen showing the clinical case worklist, selected study preview, prediction summary, and Grad-CAM evidence map.</sub>
+</p>
+
 <div align="center">
 
-[![Web Demo Dashboard](https://img.shields.io/badge/Web%20Demo-Dashboard-7ec89a?style=for-the-badge)](docs/assets/web/web-demo-full-dashboard.png)
+[![Analysis Summary](https://img.shields.io/badge/Analysis%20Summary-Evidence%20Map-2f6fed?style=for-the-badge)](docs/assets/web/web-demo-analysis-summary.png)
+[![Analysis Detail](https://img.shields.io/badge/Analysis%20Detail-Full%20Report-8B5CF6?style=for-the-badge)](docs/assets/web/web-demo-analysis-detail-full.png)
+[![Selected Study](https://img.shields.io/badge/Selected%20Study-Worklist%20View-7ec89a?style=for-the-badge)](docs/assets/web/web-demo-worklist-selected-study.png)
 
 </div>
-
-The full web demo screenshot is stored as an asset file to keep the README compact.
-
-- Asset: [`docs/assets/web/web-demo-full-dashboard.png`](docs/assets/web/web-demo-full-dashboard.png)
 
 <br />
 
