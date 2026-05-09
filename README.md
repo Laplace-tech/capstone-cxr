@@ -149,7 +149,6 @@ capstone-cxr
 
 <div align="center">
 
-[![Analysis Summary](https://img.shields.io/badge/Analysis%20Summary-Evidence%20Map-2f6fed?style=for-the-badge)](docs/assets/web/mediscope-analysis-summary-evidence-map.png)
 [![Analysis Detail](https://img.shields.io/badge/Analysis%20Detail-Full%20Report-8B5CF6?style=for-the-badge)](docs/assets/web/mediscope-full-analysis-detail.png)
 [![Selected Study](https://img.shields.io/badge/Selected%20Study-Worklist%20View-7ec89a?style=for-the-badge)](docs/assets/web/mediscope-case-worklist-selected-study.png)
 
