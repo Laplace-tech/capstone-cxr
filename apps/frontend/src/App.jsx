@@ -59,9 +59,9 @@ function App() {
         <div>
           <span className="eyebrow">Capstone CXR</span>
           <h1>Chest X-ray Reading Assist System</h1>
-          <p>예측 확률, 병변별 설명, Grad-CAM 근거 영상을 함께 제공하는 판독 보조 제품형 프로토타입입니다.</p>
+          <p>예측 확률, 병변별 설명, Grad-CAM 근거 영상을 한 화면에 묶은 흉부 X-ray 판독 보조 워크스페이스</p>
           <p className="selected-id-text">
-            현재 선택된 분석 ID: {selectedAnalysisId || "없음"}
+            선택 분석 ID {selectedAnalysisId || "없음"}
           </p>
         </div>
 

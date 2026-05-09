@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef } from "react";
 import { createAnalysis, getAnalysisResult, getAnalysisStatus } from "../api/analysisApi";
 import { normalizeAnalysisResult } from "../domain/analysisResultMapper";
+import { createHistoryResult } from "../mock/demoResultFactory";
+import { getHistoryItemById, isDemoAnalysisId } from "../mock/historyData";
 import { normalizeStatus, toUserMessage } from "../domain/formatters";
 import { useAnalysisStore } from "../stores/analysisStore";
 
@@ -151,11 +153,18 @@ export function useAnalysis() {
       if (!analysisId) return;
       stopPolling();
       setSelectedAnalysisId(analysisId);
-      setAnalysisStatus("processing");
       setError("");
+
+      if (isDemoAnalysisId(analysisId)) {
+        setAnalysisStatus("completed");
+        setResult(createHistoryResult(getHistoryItemById(analysisId)));
+        return;
+      }
+
+      setAnalysisStatus("processing");
       await completeWithResult(analysisId);
     },
-    [completeWithResult, setAnalysisStatus, setError, setSelectedAnalysisId, stopPolling],
+    [completeWithResult, setAnalysisStatus, setError, setResult, setSelectedAnalysisId, stopPolling],
   );
 
   const reset = useCallback(() => {

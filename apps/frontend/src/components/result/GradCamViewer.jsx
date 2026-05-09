@@ -35,13 +35,13 @@ function GradCamViewer({ result }) {
         linkLabel="결과 열기"
         alt="Grad-CAM evidence map"
         onImageError={() => setGradCamFailed(true)}
-        emptyMessage="Grad-CAM 결과가 아직 생성되지 않았습니다."
+        emptyMessage="Grad-CAM 결과 없음"
         footer={
           <div className="gradcam-guide">
             <strong>해석 가이드</strong>
             <p>
-              붉거나 밝게 강조된 영역은 모델이 예측에 상대적으로 더 많이 참고한 위치입니다. 이 영역은 진단 자체가 아니라
-              판독자가 확인할 후보 영역을 제시하는 보조 정보입니다.
+              붉거나 밝게 강조된 영역은 모델이 예측에 상대적으로 더 많이 참고한 위치. 이 영역은 진단 자체가 아니라
+              판독자가 확인할 후보 영역
             </p>
           </div>
         }

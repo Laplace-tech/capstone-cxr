@@ -20,7 +20,7 @@ function ResultSummary({ result }) {
           <span className="eyebrow">AI Reading Assist</span>
           <h3 id="summary-title">분석 결과 요약</h3>
           <p>
-            모델이 5개 주요 흉부 이상 소견을 독립적으로 평가하고, threshold 기준으로 양성 여부를 표시합니다.
+            모델이 5개 주요 흉부 이상 소견을 독립 평가하고 threshold 기준 양성 여부 표시
           </p>
         </div>
         <span className={`clinical-priority ${positiveCount > 0 ? "attention" : "stable"}`}>
@@ -69,7 +69,7 @@ function TopFindingCard({ topFinding }) {
       <article className="summary-hero-card top-finding-card">
         <span className="summary-label">가장 높은 확률 소견</span>
         <strong className="summary-value">-</strong>
-        <p>표시할 결과가 없습니다.</p>
+        <p>표시할 결과 없음</p>
       </article>
     );
   }
@@ -109,15 +109,15 @@ function getTopFinding(details) {
 
 function getWorkflowMessage(positiveCount, topFinding) {
   if (positiveCount > 0) {
-    return "양성으로 분류된 소견을 우선 검토하고, 원본 영상과 Grad-CAM 근거 영역을 함께 확인해야 합니다.";
+    return "양성 분류 소견을 우선 검토하고 원본 영상과 Grad-CAM 근거 영역을 함께 확인";
   }
 
   if (topFinding) {
     const info = getConditionInfo(topFinding.name);
-    return `현재 threshold 기준으로 양성 소견은 없지만, 가장 높은 확률은 ${info.koName} 항목입니다.`;
+    return `현재 threshold 기준 양성 소견 없음. 가장 높은 확률 항목은 ${info.koName}`;
   }
 
-  return "현재 표시할 예측 결과가 없습니다.";
+  return "현재 표시할 예측 결과 없음";
 }
 
 export default ResultSummary;

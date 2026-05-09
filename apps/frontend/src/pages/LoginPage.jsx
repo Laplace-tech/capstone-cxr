@@ -203,7 +203,7 @@ export default function LoginPage({ onLogin, onGoSignup }) {
 
           <button
             type="button"
-            onClick={() => onLogin({ email: "demo@hospital.com", role: "DEMO" })}
+            onClick={() => onLogin({ email: "clinician@hospital.com", role: "CLINICIAN" })}
             style={{
               width: "100%",
               padding: "11px",
@@ -216,7 +216,7 @@ export default function LoginPage({ onLogin, onGoSignup }) {
               cursor: "pointer",
             }}
           >
-            시연용으로 바로 시작
+            의료진 계정으로 시작
           </button>
         </form>
 

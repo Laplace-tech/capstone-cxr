@@ -23,7 +23,7 @@ export default function DragAndDropZone({ onFileSelect, disabled = false }) {
       return "PNG 또는 JPEG 이미지만 업로드할 수 있습니다.";
     }
     if (file.size > MAX_MB * 1024 * 1024) {
-      return `파일 크기는 ${MAX_MB}MB 이하여야 합니다.`;
+      return `파일 크기는 ${MAX_MB}MB 이하만 지원`;
     }
     return null;
   }

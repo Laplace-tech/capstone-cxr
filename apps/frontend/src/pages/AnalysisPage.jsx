@@ -32,7 +32,7 @@ function AnalysisPage() {
           <span className="eyebrow">Chest X-ray Reading Assistant</span>
           <h2>흉부 X-ray 판독 보조 대시보드</h2>
           <p>
-            DenseNet121 기반 다중 라벨 예측, 병변별 설명, Grad-CAM 근거 영상을 결합해 판독 검토 흐름을 한 화면에 정리합니다.
+            DenseNet121 기반 다중 라벨 예측, 병변별 설명, Grad-CAM 근거 영상을 연결해 판독 검토 흐름을 한 화면에 정리
           </p>
         </div>
         <div className="workflow-steps" aria-label="analysis workflow">
@@ -47,7 +47,7 @@ function AnalysisPage() {
           <div>
             <span className="eyebrow">New Study</span>
             <h2>X-ray 이미지 업로드</h2>
-            <p>PNG 또는 JPEG 흉부 X-ray 이미지를 업로드하면 AI 분석을 시작합니다.</p>
+            <p>PNG 또는 JPEG 흉부 X-ray 이미지를 업로드해 AI 분석 시작</p>
           </div>
           <StatusBadge status={toBadgeStatus(analysisStatus)} />
         </div>
@@ -71,14 +71,14 @@ function AnalysisPage() {
       {isLoading && (
         <section className="state-card product-panel loading-panel" aria-live="polite">
           <h2>{statusMessage(analysisStatus)}</h2>
-          <p>분석이 완료되면 결과 화면이 자동으로 표시됩니다.</p>
+          <p>분석 완료 후 결과 화면 자동 표시</p>
           <ResultSkeleton />
         </section>
       )}
 
       {analysisStatus === "error" && (
         <section className="state-card error-card product-panel" aria-live="polite">
-          <h2>오류가 발생했습니다</h2>
+          <h2>오류 발생</h2>
           <p>{error}</p>
           <Button variant="secondary" onClick={handleReset}>
             다시 시도
@@ -106,7 +106,7 @@ function toBadgeStatus(status) {
 function statusMessage(status) {
   if (status === "uploading") return "이미지 업로드 중...";
   if (status === "queued") return "분석 대기 중...";
-  if (status === "processing") return "AI가 분석 중입니다...";
+  if (status === "processing") return "AI 분석 진행 중...";
   return "처리 중...";
 }
 
