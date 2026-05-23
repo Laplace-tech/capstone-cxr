@@ -132,7 +132,7 @@ capstone-cxr
 ## System Architecture
 
 <p align="center">
-  <img src="docs/assets/architecture/service-architecture.jpg" alt="MediScope service architecture" width="900" />
+  <img src="docs/assets/architecture/service-architecture.jpg" alt="MediScope service architecture" width="940" />
 </p>
 
 <br />
