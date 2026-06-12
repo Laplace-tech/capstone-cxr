@@ -151,23 +151,6 @@ capstone-cxr
 
 <br />
 
-## Web Demo
-
-<p align="center">
-  <img src="docs/assets/web/mediscope-worklist-dashboard-overview.png" alt="MediScope worklist dashboard overview" width="940" />
-</p>
-
-<p align="center">
-  <sub>Main web demonstration screen showing the clinical case worklist, selected study preview, prediction summary, and Grad-CAM evidence map.</sub>
-</p>
-
-<div align="center">
-
-[![Analysis Detail](https://img.shields.io/badge/Analysis%20Detail-Full%20Report-8B5CF6?style=for-the-badge)](docs/assets/web/mediscope-full-analysis-detail.png)
-[![Selected Study](https://img.shields.io/badge/Selected%20Study-Worklist%20View-7ec89a?style=for-the-badge)](docs/assets/web/mediscope-case-worklist-selected-study.png)
-
-</div>
-
 <br />
 
 ## Award & Academic Output
