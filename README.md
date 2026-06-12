@@ -159,16 +159,6 @@ capstone-cxr
 
 ## Award & Academic Output
 
-<div align="center">
-
-<img src="https://img.shields.io/badge/KIIT%202026%20Summer%20Conference-Silver%20Award-C0C0C0?style=for-the-badge" alt="KIIT 2026 Summer Conference Silver Award" />
-<img src="https://img.shields.io/badge/Student%20Paper%20Competition-Awarded-8B5CF6?style=for-the-badge" alt="Student Paper Competition Awarded" />
-<img src="https://img.shields.io/badge/Research%20Field-Medical%20Imaging%20AI-7ec89a?style=for-the-badge" alt="Medical Imaging AI" />
-
-</div>
-
-<br />
-
 ### 2026 한국정보기술학회 하계종합학술대회 · 대학생 부문 논문경진대회 우수논문상 (은상)
 
 | Item | Details |
@@ -182,15 +172,6 @@ capstone-cxr
 | Affiliation | 경기대학교 AI컴퓨터공학부 |
 | Advisor | 임현기 교수 |
 | Date | 2026.06.06 |
-
-<br />
-
-<div align="center">
-
-[![Paper Cover](https://img.shields.io/badge/Paper%20Cover-Asset-8B5CF6?style=for-the-badge)](docs/assets/research/paper-cover.png)
-[![Award Certificate](https://img.shields.io/badge/Award%20Certificate-PDF-C0C0C0?style=for-the-badge)](docs/assets/awards/kiit-2026-summer-silver-award.pdf)
-
-</div>
 
 <br />
 
