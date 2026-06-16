@@ -140,8 +140,6 @@ capstone-cxr
 
 <br />
 
-<br />
-
 ## Award & Academic Output
 
 ### 2026 한국정보기술학회 하계종합학술대회 · 대학생 부문 논문경진대회
@@ -164,7 +162,6 @@ The conference paper cover and award certificate are stored as repository assets
 
 - Paper cover: [`docs/assets/research/paper-cover.png`](docs/assets/research/paper-cover.png)
 - Award certificate PDF: [`docs/assets/awards/kiit-2026-summer-silver-award.pdf`](docs/assets/awards/kiit-2026-summer-silver-award.pdf)
-- Award certificate preview: [`docs/assets/awards/kiit-2026-summer-silver-award.png`](docs/assets/awards/kiit-2026-summer-silver-award.png)
 
 <br />
 
