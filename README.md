@@ -58,7 +58,7 @@
 
 ## Project Snapshot
 
-Client-side Chest X-ray upload부터 server-side model inference, result persistence,
+Client-side Chest X-ray upload부터 Server-side의 model inference, result persistence,
 Grad-CAM visualization까지, DenseNet121 backbone으로 직접 학습한 model을 하나의
 end-to-end service workflow로 연결한 academic prototype.
 
@@ -88,7 +88,7 @@ end-to-end service workflow로 연결한 academic prototype.
 ## Research-to-Service Pipeline
 
 Model research와 Service implementation을 별도의 repository로 분리하여
-experiment history와 product code의 책임을 명확하게 구분하여 진행하였다.
+experiment history와 product code의 책임을 명확히 구분하여 진행하였다.
 
 | Repository | Role | Description |
 |---|---|---|
@@ -98,7 +98,7 @@ experiment history와 product code의 책임을 명확하게 구분하여 진행
 ### Model Development
 
 CheXpert PoC에서 uncertainty policy와 class-specific threshold를 비교한 뒤,
-최종 선정한 model artifact와 inference logic만 MediScope service에 통합했다.
+최종 선정한 model artifact와 inference logic만 MediScope service에 통합시켰다.
 
 ```text
 CheXpert Research PoC
@@ -106,8 +106,8 @@ CheXpert Research PoC
 MediScope Service
 ```
 
-> 구체적인 experiment setup과 model training·validation, uncertainty-label policy 비교,
-> metrics evaluation, threshold tuning 적용 과정은
+> 구체적인 experiment setup과 model training·validation,
+> uncertainty-label policy 비교, metrics evaluation, threshold tuning 적용 과정은
 > [CheXpert Research PoC](https://github.com/Laplace-tech/CheXpert)를 참고.
 
 <br />
