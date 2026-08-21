@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1a2e1a,18:2d6b4a,42:7ec89a,62:f48fb1,80:f8c8dc,100:fce4ec&height=300&section=header&text=MediScope&fontSize=62&fontColor=f0fff4&fontAlignY=38&animation=fadeIn&desc=Chest%20X-ray%20Reading%20Assist%20System&descSize=19&descAlignY=64" width="100%" alt="MediScope header" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1a2e1a,18:2d6b4a,42:7ec89a,62:f48fb1,80:f8c8dc,100:fce4ec&height=300&section=header&text=MediScope&fontSize=62&fontColor=f0fff4&fontAlignY=38&animation=fadeIn" width="100%" alt="MediScope header" />
 </p>
 
 <div align="center">
@@ -86,51 +86,14 @@ DenseNet121 기반 흉부 X-ray 다중 라벨 예측과 Grad-CAM 시각화를 �
 
 | Area | Description |
 |---|---|
+| Program | 경기대학교 2026 기초캡스톤디자인 경진대회 |
 | Service | Chest X-ray reading assistance system |
 | Development Period | 2026.03 – 2026.05 |
-| Model | DenseNet121 multi-label classifier |
-| Explainability | Grad-CAM evidence map |
-| Target Findings | Atelectasis, Cardiomegaly, Consolidation, Edema, Pleural Effusion |
+| Research Task | Chest X-ray multi-label classification |
 | Main Outcome | U-Ignore selected as the representative uncertainty policy |
-| Deployment Form | React/Vite + Spring Boot + FastAPI + PostgreSQL + Docker Compose |
-| Research PoC | [CheXpert Experiment Repository](https://github.com/Laplace-tech/CheXpert) |
-| Award | KIIT 2026 Summer Conference Student Paper Competition Silver Award |
 
 <br />
 
-
-## Repository Relationship
-
-This project is split into two repositories with different responsibilities.
-
-| Repository | Role | Description |
-|---|---|---|
-| [`capstone-cxr`](https://github.com/Laplace-tech/capstone-cxr) | Product / Service Repository | React, Spring Boot, FastAPI, PostgreSQL, Docker Compose 기반의 웹 서비스 구현 레포 |
-| [`CheXpert`](https://github.com/Laplace-tech/CheXpert) | Research / Model PoC Repository | CheXpert-small 기반 DenseNet121 학습, 평가, threshold tuning, Grad-CAM 실험 레포 |
-
-`CheXpert` is the research and experiment repository where the model pipeline was trained and evaluated.  
-`capstone-cxr` is the service repository where the selected model artifacts and inference flow are integrated into a web-based reading assistance system.
-
-```text
-CheXpert
-  └─ model training
-  └─ uncertainty policy comparison
-  └─ AUROC / AUPRC evaluation
-  └─ F1 threshold tuning
-  └─ Grad-CAM validation
-        ↓ selected model artifacts and inference logic
-capstone-cxr
-  └─ React frontend
-  └─ Spring Boot backend
-  └─ FastAPI AI service
-  └─ PostgreSQL
-  └─ Docker Compose
-```
-
-> The two repositories are separated for clarity:  
-> **CheXpert = research evidence**, **capstone-cxr = service implementation**.
-
-<br />
 
 ## System Architecture
 
@@ -140,15 +103,46 @@ capstone-cxr
 
 <br />
 
+## Research-to-Service Pipeline
+
+Model research and service implementation are separated across two repositories.
+
+| Repository | Role | Description |
+|---|---|---|
+| [`CheXpert`](https://github.com/Laplace-tech/CheXpert) | Research / Model PoC | Model training, evaluation, threshold tuning, Grad-CAM validation |
+| [`capstone-cxr`](https://github.com/Laplace-tech/capstone-cxr) | Product / Service | Selected model artifacts and inference flow를 통합한 web application |
+
+### Model Development
+
+| Item | Details |
+|---|---|
+| Dataset | CheXpert-small |
+| Backbone | DenseNet121 |
+| Task | Multi-label classification |
+| Target Labels | Atelectasis, Cardiomegaly, Consolidation, Edema, Pleural Effusion |
+| Metrics | AUROC, AUPRC |
+| Uncertainty Policy | U-Ignore |
+| Thresholding | F1-based class-specific threshold tuning |
+| Explainability | Grad-CAM visualization |
+
+```text
+CheXpert Research PoC
+        ↓ selected model artifacts and inference logic
+MediScope Service
+```
+
+Model checkpoints, raw datasets, logs, and generated experiment outputs are intentionally excluded from this service repository.
+
+<br />
+
 ## Award & Academic Output
 
 ### 2026 한국정보기술학회 하계종합학술대회 · 대학생 부문 논문경진대회
 
 | Item | Details |
 |---|---|
-| Award | 2026 한국정보기술학회 하계종합학술대회 · 대학생 부문 우수논문상 (은상) |
-| Conference | 2026년 한국정보기술학회 하계종합학술대회 |
-| Division | 대학생 논문경진대회 |
+| Award | 우수논문상 (은상) |
+| Conference | 2026 한국정보기술학회 하계종합학술대회 · 대학생 논문경진대회 |
 | Research Field | Deep Learning · Medical Imaging AI |
 | Paper Title | 딥러닝 기반 흉부 X-ray 판독 보조 시스템: Grad-CAM을 활용한 설명가능한 의료영상 AI |
 | Authors | 박용민(제1저자), 박지원, 송호성, 이용준, 하윤진, 손세연, 임현기(지도교수) |
@@ -175,24 +169,6 @@ The conference paper cover and award certificate are stored as repository assets
 </p>
 
 </details>
-
-<br />
-
-## Model Development Reference
-
-The model development process is documented in the separate CheXpert PoC repository.
-
-- Repository: [Laplace-tech/CheXpert](https://github.com/Laplace-tech/CheXpert)
-- Dataset: CheXpert-small
-- Backbone: DenseNet121
-- Task: Multi-label classification
-- Target labels: Atelectasis, Cardiomegaly, Consolidation, Edema, Pleural Effusion
-- Metrics: AUROC, AUPRC
-- Thresholding: F1-based class-specific threshold tuning
-- Explainability: Grad-CAM visualization
-
-The representative model used in this service was selected from the CheXpert PoC experiments.  
-Model checkpoints, raw datasets, logs, and generated experiment outputs are intentionally excluded from this service repository.
 
 <br />
 
@@ -268,9 +244,9 @@ npm run dev
 
 ## Notice
 
-This repository is an academic capstone project for chest X-ray reading assistance.  
-The development period was **2026.03 – 2026.05**.  
-It is not intended for autonomous clinical diagnosis.
+This repository is intended for academic research and demonstration purposes only.
+
+It is not intended for autonomous clinical diagnosis or medical decision-making.
 
 <br />
 
