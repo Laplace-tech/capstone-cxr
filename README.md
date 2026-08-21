@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1a2e1a,18:2d6b4a,42:7ec89a,62:f48fb1,80:f8c8dc,100:fce4ec&height=300&section=header&text=MediScope&fontSize=62&fontColor=f0fff4&fontAlignY=38&animation=fadeIn" width="100%" alt="MediScope header" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&amp;color=0:1a2e1a,18:2d6b4a,42:7ec89a,62:f48fb1,80:f8c8dc,100:fce4ec&amp;height=300&amp;section=header&amp;text=MediScope&amp;fontSize=62&amp;fontColor=f0fff4&amp;fontAlignY=38&amp;animation=fadeIn&amp;desc=Powered%20by%20Explainable%20AI%20(XAI)%20for%20Medical%20Image%20Analysis&amp;descSize=19&amp;descAlignY=63" width="100%" alt="MediScope — Explainable AI for Medical Image Analysis" />
 </p>
 
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=Dancing+Script&weight=700&size=44&duration=1&pause=99999&color=ffd6e8&center=true&vCenter=true&width=900&lines=AI-Powered+Chest+X-ray+Assistive+Service" alt="AI-Powered Chest X-ray Assistive Service" />
+<img src="https://readme-typing-svg.demolab.com?font=Dancing+Script&weight=700&size=42&duration=1&pause=99999&color=ffd6e8&center=true&vCenter=true&width=900&lines=Chest+X-ray+Reading+Assist+System" alt="Chest X-ray Reading Assist System" />
 
-<img src="https://readme-typing-svg.demolab.com?font=Noto+Serif+KR&weight=700&size=23&duration=1&pause=99999&color=a8dfc0&center=true&vCenter=true&width=980&lines=%EC%9D%98%EB%A3%8C+%EC%98%81%EC%83%81+%EA%B8%B0%EB%B0%98+%ED%9D%89%EB%B6%80+X-ray+%ED%8C%90%EB%8F%85+%EB%B3%B4%EC%A1%B0+%EC%9B%B9+%EC%84%9C%EB%B9%84%EC%8A%A4" alt="의료 영상 기반 흉부 X-ray 판독 보조 웹 서비스" />
+<img src="https://readme-typing-svg.demolab.com?font=Noto+Serif+KR&weight=700&size=21&duration=1&pause=99999&color=a8dfc0&center=true&vCenter=true&width=1100&lines=%EB%8B%A4%EC%A4%91%20%EC%A7%88%ED%99%98%20%EC%98%88%EC%B8%A1%20%EA%B2%B0%EA%B3%BC%EC%99%80%20%EC%8B%9C%EA%B0%81%EC%A0%81%20%ED%8C%90%EB%8B%A8%20%EA%B7%BC%EA%B1%B0%EB%A5%BC%20%EC%A0%9C%EA%B3%B5%ED%95%98%EB%8A%94%20%EC%9D%98%EB%A3%8C%20%EC%98%81%EC%83%81%20%EB%B6%84%EC%84%9D%20%EC%9B%B9%20%EC%84%9C%EB%B9%84%EC%8A%A4" alt="다중 질환 예측 결과와 시각적 판단 근거를 제공하는 의료 영상 분석 웹 서비스" />
 
 <br />
 
@@ -36,7 +36,7 @@
 |:---:|:---:|:---:|
 | <div align="center"><a href="https://github.com/zuxzae"><img src="https://github.com/zuxzae.png" width="92" alt="하윤진" /></a></div> | <div align="center"><a href="https://github.com/Laplace-tech"><img src="https://github.com/Laplace-tech.png" width="126" alt="박용민" /></a></div> | <div align="center"><a href="https://github.com/HOSUNG-07"><img src="https://github.com/HOSUNG-07.png" width="92" alt="송호성" /></a></div> |
 | <div align="center"><img src="https://img.shields.io/badge/Frontend%20Lead-61DAFB?style=for-the-badge&logo=react&logoColor=20232A" alt="Frontend Lead" /></div> | <div align="center"><img src="https://img.shields.io/badge/Team%20Leader-8B5CF6?style=for-the-badge&logo=github-sponsors&logoColor=white" alt="Team Leader" /><br /><img src="https://img.shields.io/badge/AI%20Lead-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" alt="AI Lead" /></div> | <div align="center"><img src="https://img.shields.io/badge/Backend%20Lead-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Backend Lead" /></div> |
-| <div align="center"><b>React/Vite UI</b><br />Upload Flow<br />Result Dashboard<br />Product UX</div> | <div align="center"><b>Project Direction</b><br /><b>AI Architecture</b><br /><b>Core Inference Pipeline</b><br />DenseNet121 Training · Grad-CAM<br />AI Service Integration · Demo Readiness</div> | <div align="center"><b>Spring Boot API</b><br />Analysis Lifecycle<br />DB/API Integration<br />AI Service Bridge</div> |
+| <div align="center"><b>React/Vite UI</b><br />Upload Flow<br />Result Dashboard<br />Product UX</div> | <div align="center"><b>Project Direction</b><br /><b>AI Architecture</b><br /><b>Core Inference Pipeline</b><br />DenseNet121 Training · Grad-CAM<br /></div> | <div align="center"><b>Spring Boot API</b><br />Analysis Lifecycle<br />DB/API Integration<br />AI Service Bridge</div> |
 | <div align="center"><a href="https://github.com/zuxzae"><img src="https://img.shields.io/badge/GitHub-zuxzae-b5dfc8?style=for-the-badge&logo=github&logoColor=2d6b4a" alt="GitHub zuxzae" /></a></div> | <div align="center"><a href="https://github.com/Laplace-tech"><img src="https://img.shields.io/badge/GitHub-Laplace--tech-f9b8ce?style=for-the-badge&logo=github&logoColor=b5547a" alt="GitHub Laplace-tech" /></a></div> | <div align="center"><a href="https://github.com/HOSUNG-07"><img src="https://img.shields.io/badge/GitHub-HOSUNG--07-b5dfc8?style=for-the-badge&logo=github&logoColor=2d6b4a" alt="GitHub HOSUNG-07" /></a></div> |
 
 <br />
@@ -56,41 +56,23 @@
 
 <br />
 
-<div align="center">
-
-## MediScope · Chest X-ray Reading Assist System
-
-DenseNet121 기반 흉부 X-ray 다중 라벨 예측과 Grad-CAM 시각화를 결합한 흉부 X-ray 판독 보조 웹 서비스
-
-<br />
-
-<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=20232A" alt="React" />
-<img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
-<img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot" />
-<img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
-<img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch" />
-<img src="https://img.shields.io/badge/DenseNet121-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" alt="DenseNet121" />
-<img src="https://img.shields.io/badge/Grad--CAM-8B5CF6?style=for-the-badge" alt="Grad-CAM" />
-<img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
-<img src="https://img.shields.io/badge/Docker%20Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Compose" />
-
-</div>
-
-<br />
-
----
-
-<br />
-
 ## Project Snapshot
+
+Client-side Chest X-ray upload부터 server-side model inference, result persistence,
+Grad-CAM visualization까지, DenseNet121 backbone으로 직접 학습한 model을 하나의
+end-to-end service workflow로 연결한 academic prototype.
 
 | Area | Description |
 |---|---|
-| Program | 경기대학교 2026 기초캡스톤디자인 경진대회 |
-| Service | Chest X-ray reading assistance system |
+| Program | 경기대학교 AI컴퓨터공학부 2026 기초캡스톤디자인 경진대회 |
+| Service | CNN-based Chest X-ray reading assistance system |
 | Development Period | 2026.03 – 2026.05 |
-| Research Task | Chest X-ray multi-label classification |
-| Main Outcome | U-Ignore selected as the representative uncertainty policy |
+| Research Task | Multi-label classification of Chest X-ray findings |
+| Model | DenseNet121 multi-label classifier |
+| Target Findings | Atelectasis · Cardiomegaly · Consolidation · Edema · Pleural Effusion |
+| Explainability | Prediction evidence visualization with Grad-CAM |
+| Service Stack | React/Vite · Spring Boot · FastAPI · PostgreSQL · Docker Compose |
+| Main Outcome | U-Ignore selected as the representative uncertainty-label policy |
 
 <br />
 
@@ -105,25 +87,18 @@ DenseNet121 기반 흉부 X-ray 다중 라벨 예측과 Grad-CAM 시각화를 �
 
 ## Research-to-Service Pipeline
 
-Model research and service implementation are separated across two repositories.
+Model research와 service implementation을 별도 repository로 분리하여
+experiment history와 product code의 책임을 명확하게 구분했다.
 
 | Repository | Role | Description |
 |---|---|---|
 | [`CheXpert`](https://github.com/Laplace-tech/CheXpert) | Research / Model PoC | Model training, evaluation, threshold tuning, Grad-CAM validation |
-| [`capstone-cxr`](https://github.com/Laplace-tech/capstone-cxr) | Product / Service | Selected model artifacts and inference flow를 통합한 web application |
+| [`capstone-cxr`](https://github.com/Laplace-tech/capstone-cxr) | Product / Service | Selected model artifacts와 inference flow를 통합한 web application |
 
 ### Model Development
 
-| Item | Details |
-|---|---|
-| Dataset | CheXpert-small |
-| Backbone | DenseNet121 |
-| Task | Multi-label classification |
-| Target Labels | Atelectasis, Cardiomegaly, Consolidation, Edema, Pleural Effusion |
-| Metrics | AUROC, AUPRC |
-| Uncertainty Policy | U-Ignore |
-| Thresholding | F1-based class-specific threshold tuning |
-| Explainability | Grad-CAM visualization |
+CheXpert PoC에서 uncertainty policy와 class-specific threshold를 비교한 뒤,
+최종 선정한 model artifact와 inference logic만 MediScope service에 통합했다.
 
 ```text
 CheXpert Research PoC
@@ -131,7 +106,10 @@ CheXpert Research PoC
 MediScope Service
 ```
 
-Model checkpoints, raw datasets, logs, and generated experiment outputs are intentionally excluded from this service repository.
+> 구체적인 experiment setup과 model training·validation, uncertainty-label policy 비교,
+> AUROC/AUPRC evaluation, class-specific threshold tuning, Grad-CAM 검증 및
+> representative model selection 과정은
+> [CheXpert Research PoC](https://github.com/Laplace-tech/CheXpert)를 참고.
 
 <br />
 
@@ -145,7 +123,7 @@ Model checkpoints, raw datasets, logs, and generated experiment outputs are inte
 | Conference | 2026 한국정보기술학회 하계종합학술대회 · 대학생 논문경진대회 |
 | Research Field | Deep Learning · Medical Imaging AI |
 | Paper Title | 딥러닝 기반 흉부 X-ray 판독 보조 시스템: Grad-CAM을 활용한 설명가능한 의료영상 AI |
-| Authors | 박용민(제1저자), 박지원, 송호성, 이용준, 하윤진, 손세연, 임현기(지도교수) |
+| Authors | 박용민 (First Author), 박지원, 송호성, 이용준, 하윤진, 손세연, 임현기 |
 | Affiliation | 경기대학교 AI컴퓨터공학부 |
 | Advisor | 경기대학교 임현기 교수 |
 | Date | 2026.06.06 |
@@ -227,7 +205,7 @@ AI Service : http://localhost:8000
 
 ## Development Mode
 
-For frontend-heavy work, keep backend/AI/database in Docker and run the frontend locally.
+For frontend-focused development, run PostgreSQL, backend, and AI service in Docker while running the frontend locally.
 
 ```bash
 cd ~/projects/capstone-cxr
