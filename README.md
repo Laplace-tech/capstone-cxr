@@ -36,7 +36,7 @@
 |:---:|:---:|:---:|
 | <div align="center"><a href="https://github.com/zuxzae"><img src="https://github.com/zuxzae.png" width="92" alt="하윤진" /></a></div> | <div align="center"><a href="https://github.com/Laplace-tech"><img src="https://github.com/Laplace-tech.png" width="126" alt="박용민" /></a></div> | <div align="center"><a href="https://github.com/HOSUNG-07"><img src="https://github.com/HOSUNG-07.png" width="92" alt="송호성" /></a></div> |
 | <div align="center"><img src="https://img.shields.io/badge/Frontend%20Lead-61DAFB?style=for-the-badge&logo=react&logoColor=20232A" alt="Frontend Lead" /></div> | <div align="center"><img src="https://img.shields.io/badge/Team%20Leader-8B5CF6?style=for-the-badge&logo=github-sponsors&logoColor=white" alt="Team Leader" /><br /><img src="https://img.shields.io/badge/AI%20Lead-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" alt="AI Lead" /></div> | <div align="center"><img src="https://img.shields.io/badge/Backend%20Lead-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Backend Lead" /></div> |
-| <div align="center"><b>React/Vite UI</b><br />Upload Flow<br />Result Dashboard<br />Product UX</div> | <div align="center"><b>Project Direction</b><br /><b>AI Architecture</b><br /><b>Core Inference Pipeline</b><br />DenseNet121 Training · Grad-CAM<br /></div> | <div align="center"><b>Spring Boot API</b><br />Analysis Lifecycle<br />DB/API Integration<br />AI Service Bridge</div> |
+| <div align="center"><b>React/Vite UI</b><br />Upload Flow<br />Result Dashboard<br />Product UX</div> | <div align="center"><b>Project Management</b><br /><b>AI-Research Pipeline</b><br /><b>Processing Image Inference</b><br />Model Training · Grad-CAM<br /></div> | <div align="center"><b>Spring Boot API</b><br />Analysis Lifecycle<br />DB/API Integration<br />AI Service Bridge</div> |
 | <div align="center"><a href="https://github.com/zuxzae"><img src="https://img.shields.io/badge/GitHub-zuxzae-b5dfc8?style=for-the-badge&logo=github&logoColor=2d6b4a" alt="GitHub zuxzae" /></a></div> | <div align="center"><a href="https://github.com/Laplace-tech"><img src="https://img.shields.io/badge/GitHub-Laplace--tech-f9b8ce?style=for-the-badge&logo=github&logoColor=b5547a" alt="GitHub Laplace-tech" /></a></div> | <div align="center"><a href="https://github.com/HOSUNG-07"><img src="https://img.shields.io/badge/GitHub-HOSUNG--07-b5dfc8?style=for-the-badge&logo=github&logoColor=2d6b4a" alt="GitHub HOSUNG-07" /></a></div> |
 
 <br />
@@ -87,8 +87,8 @@ end-to-end service workflow로 연결한 academic prototype.
 
 ## Research-to-Service Pipeline
 
-Model research와 service implementation을 별도 repository로 분리하여
-experiment history와 product code의 책임을 명확하게 구분했다.
+Model research와 Service implementation을 별도의 repository로 분리하여
+experiment history와 product code의 책임을 명확하게 구분하여 진행하였다.
 
 | Repository | Role | Description |
 |---|---|---|
@@ -107,8 +107,7 @@ MediScope Service
 ```
 
 > 구체적인 experiment setup과 model training·validation, uncertainty-label policy 비교,
-> AUROC/AUPRC evaluation, class-specific threshold tuning, Grad-CAM 검증 및
-> representative model selection 과정은
+> metrics evaluation, threshold tuning 적용 과정은
 > [CheXpert Research PoC](https://github.com/Laplace-tech/CheXpert)를 참고.
 
 <br />
