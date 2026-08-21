@@ -86,7 +86,7 @@ DenseNet121 backbone을 직접 학습하여 얻은 model artifact를 하나의 e
 ## Research-to-Service Pipeline
 
 위 System Architecture와 같이 ML Research와 Service Development를 별도의 repositories로 분리하여,
-experiment history와 production code의 책임 영역을 명확히 구분하고 각각 독립적으로 관리하였다.
+experiment history와 production code의 책임 영역을 명확히 구분하고 각각 독립적으로 관리함.
 
 | Repository | Role | Description |
 |---|---|---|
@@ -96,7 +96,7 @@ experiment history와 production code의 책임 영역을 명확히 구분하고
 ### Model Development
 
 CheXpert PoC에서 uncertainty policy와 class-specific threshold를 비교·검증한 뒤,
-최종 선정된 model artifact와 inference logic만 MediScope service에 통합하였다.
+최종 선정된 model artifact와 inference logic만 MediScope service에 통합함.
 
 ```text
 CheXpert Research PoC
