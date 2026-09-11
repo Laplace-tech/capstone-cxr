@@ -4,7 +4,7 @@
 
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=Dancing+Script&amp;weight=700&amp;size=42&amp;duration=1&amp;pause=99999&amp;color=ffd6e8&amp;center=true&amp;vCenter=true&amp;width=900&amp;lines=Chest+X-ray+Reading+Assist+System" alt="Chest X-ray Reading Assist System" />
+<img src="https://readme-typing-svg.demolab.com?font=Dancing+Script&amp;weight=700&amp;size=42&amp;duration=1&amp;pause=99999&amp;color=ffd6e8&amp;center=true&amp;vCenter=true&amp;width=900&amp;lines=Chest+X-ray+Reading+Assistance+System" alt="CNN based Chest X-ray Reading Assistance System" />
 
 <img src="https://readme-typing-svg.demolab.com?font=Noto+Serif+KR&amp;weight=700&amp;size=21&amp;duration=1&amp;pause=99999&amp;color=a8dfc0&amp;center=true&amp;vCenter=true&amp;width=1100&amp;lines=%EB%8B%A4%EC%A4%91%20%EC%A7%88%ED%99%98%20%EC%98%88%EC%B8%A1%20%EA%B2%B0%EA%B3%BC%EC%99%80%20%EC%8B%9C%EA%B0%81%EC%A0%81%20%ED%8C%90%EB%8B%A8%20%EA%B7%BC%EA%B1%B0%EB%A5%BC%20%EC%A0%9C%EA%B3%B5%ED%95%98%EB%8A%94%20%EC%9D%98%EB%A3%8C%20%EC%98%81%EC%83%81%20%EB%B6%84%EC%84%9D%20%EC%9B%B9%20%EC%84%9C%EB%B9%84%EC%8A%A4" alt="다중 질환 예측 결과와 시각적 판단 근거를 제공하는 의료 영상 분석 웹 서비스" />
 
@@ -24,7 +24,10 @@
 
 <img src="https://readme-typing-svg.demolab.com?font=Dancing+Script&amp;weight=700&amp;size=44&amp;duration=1&amp;pause=99999&amp;color=7ec89a&amp;center=true&amp;vCenter=true&amp;width=720&amp;lines=%F0%9F%8C%B8+Capstone+Team+MediScope+%F0%9F%8C%B8" alt="Capstone Team MediScope" />
 
-<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&amp;weight=500&amp;size=19&amp;duration=1&amp;pause=99999&amp;color=a8d5b5&amp;center=true&amp;vCenter=true&amp;width=620&amp;lines=%E2%80%94%E2%80%94%E2%80%94+Spring+2026+%C2%B7+Chest+X-ray+AI+Service+%E2%80%94%E2%80%94%E2%80%94" alt="Spring 2026 · Chest X-ray AI Service" />
+<img
+  src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&amp;weight=500&amp;size=19&amp;duration=1&amp;pause=99999&amp;color=a8d5b5&amp;center=true&amp;vCenter=true&amp;width=620&amp;lines=Spring+%C2%B7+2026"
+  alt="2026 · Spring"
+/>
 
 </div>
 
@@ -58,20 +61,17 @@
 
 ## Project Snapshot
 
-Chest X-ray image upload부터 server-side model inference, Grad-CAM visualization까지,
+Chest X-ray image 업로드부터 server-side model inference, Grad-CAM visualization까지,
 DenseNet121 backbone을 직접 학습하여 얻은 model artifact를 하나의 end-to-end service workflow로 연결한 prototype.
 
 | Area | Description |
 |---|---|
-| Program | 경기대학교 AI컴퓨터공학부 2026 기초캡스톤디자인 경진대회 |
+| Competition | 경기대학교 AI컴퓨터공학부 2026 기초캡스톤디자인 경진대회 |
 | Service | CNN-based Chest X-ray Reading Assistance System |
 | Development Period | 2026.03 – 2026.05 |
 | Research Task | Multi-label Classification of Chest X-ray Findings |
-| Model | DenseNet121 Multi-label Classifier |
 | Target Findings | Atelectasis · Cardiomegaly · Consolidation · Edema · Pleural Effusion |
-| Explainability | Grad-CAM-based Visualization of Prediction Evidence |
 | Service Stack | React/Vite · Spring Boot · FastAPI · PostgreSQL · Docker Compose |
-| Main Outcome | U-Ignore selected as the representative uncertainty-label policy |
 
 <br />
 
@@ -118,7 +118,7 @@ MediScope Service
 |---|---|
 | Award | 우수논문상 (은상) |
 | Conference | 2026 한국정보기술학회 하계종합학술대회 · 대학생 논문경진대회 |
-| Research Area | Deep Learning · Medical Imaging AI |
+| Research Area | Deep Learning · Medical AI |
 | Paper Title | 딥러닝 기반 흉부 X-ray 판독 보조 시스템: Grad-CAM을 활용한 설명가능한 의료영상 AI |
 | Authors | 박용민 **(First Author)**, 박지원, 송호성, 이용준, 하윤진, 손세연, 임현기 |
 | Affiliation | 경기대학교 AI컴퓨터공학부 |
