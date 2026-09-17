@@ -108,6 +108,13 @@ MediScope Service
 > metrics evaluation 및 threshold tuning 과정은
 > [CheXpert Research PoC](https://github.com/Laplace-tech/CheXpert)를 참고.
 
+Versioned inference artifacts:
+
+- `apps/ai-service/artifacts/checkpoints/best.pt`
+- `apps/ai-service/artifacts/checkpoints/config_snapshot.json`
+- `apps/ai-service/artifacts/checkpoints/infer_thresholds.json`
+- Checkpoint SHA-256: `f8b45ba19f69d5844e2bd5fe484ddb4badec455039c6737cba40bd5a033c12f9`
+
 <br />
 
 ## Award & Academic Output

@@ -66,6 +66,9 @@ apps/ai-service/**/*.pth
 apps/ai-service/**/*.ckpt
 apps/ai-service/**/*.onnx
 
+# 선택된 service deployment checkpoint는 재현성을 위해 추적
+!apps/ai-service/artifacts/checkpoints/best.pt
+
 # =========================
 # Runtime shared files
 # =========================
