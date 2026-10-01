@@ -73,6 +73,8 @@ DenseNet121 backbone을 직접 학습하여 얻은 model artifact를 하나의 e
 | Target Findings | Atelectasis · Cardiomegaly · Consolidation · Edema · Pleural Effusion |
 | Service Stack | React/Vite · Spring Boot · FastAPI · PostgreSQL · Docker Compose |
 
+- Capstone Award Certificate PDF ⬇️ *(Team Copy)*: [`docs/awards/2026_Capstone/(your name)`](docs/awards/2026_Capstone)
+
 <br />
 
 ## System Architecture
@@ -138,7 +140,6 @@ The conference paper cover and award certificate are included as repository asse
 
 - Paper Cover 📄: [`docs/assets/research/paper-cover.png`](docs/assets/research/paper_cover.png)
 - KIIT Award Certificate PDF ⬇️ *(Team Copy)*: [`docs/awards/KIIT/kiit-2026-summer-silver-award.pdf`](docs/awards/KIIT/kiit-2026-summer-silver-award.pdf)
-- Capstone Award Certificate PDF ⬇️ *(Team Copy)*: [`docs/awards/2026_Capstone/(your name)`](docs/awards/2026_Capstone)
 
 <br />
 
