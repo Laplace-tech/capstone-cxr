@@ -136,8 +136,9 @@ Versioned inference artifacts:
 
 The conference paper cover and award certificate are included as repository assets.
 
-- Paper Cover 📄: [`docs/assets/research/paper-cover.png`](docs/assets/research/paper-cover.png)
-- Award Certificate PDF ⬇️ *(Team Copy)*: [`docs/assets/awards/kiit-2026-summer-silver-award.pdf`](docs/assets/awards/kiit-2026-summer-silver-award.pdf)
+- Paper Cover 📄: [`docs/assets/research/paper-cover.png`](docs/assets/research/paper_cover.png)
+- KIIT Award Certificate PDF ⬇️ *(Team Copy)*: [`docs/awards/KIIT/kiit-2026-summer-silver-award.pdf`](docs/awards/KIIT/kiit-2026-summer-silver-award.pdf)
+- Capstone Award Certificate PDF ⬇️ *(Team Copy)*: [`docs/awards/2026_Capstone/(your name)`](docs/awards/2026_Capstone)
 
 <br />
 
@@ -147,7 +148,7 @@ The conference paper cover and award certificate are included as repository asse
 <br />
 
 <p align="center">
-  <img src="docs/assets/awards/kiit-2026-summer-silver-award.png" alt="KIIT 2026 Summer Conference Silver Award Certificate" width="720" />
+  <img src="docs/awards/KIIT/kiit-2026-summer-silver-award.png" alt="KIIT 2026 Summer Conference Silver Award Certificate" width="720" />
 </p>
 
 </details>
