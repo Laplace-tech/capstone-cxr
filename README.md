@@ -66,14 +66,22 @@ DenseNet121 backbone을 직접 학습하여 얻은 model artifact를 하나의 e
 
 | Area | Description |
 |---|---|
-| Competition | 경기대학교 AI컴퓨터공학부 2026 기초캡스톤디자인 경진대회 |
+| Competition | 경기대학교 AI컴퓨터공학부 2026학년도 산학협력 캡스톤디자인 경진대회 |
+| Award | 기초캡스톤(3학년) 부문 장려상 |
 | Service | CNN-based Chest X-ray Reading Assistance System |
 | Development Period | 2026.03 – 2026.05 |
 | Research Task | Multi-label Classification of Chest X-ray Findings |
 | Target Findings | Atelectasis · Cardiomegaly · Consolidation · Edema · Pleural Effusion |
 | Service Stack | React/Vite · Spring Boot · FastAPI · PostgreSQL · Docker Compose |
 
+<br />
+
+The competition award certificate are included as repository assets.
+
 - Capstone Award Certificate PDF ⬇️ *(Team Copy)*: [`docs/awards/2026_Capstone/(your name)`](docs/awards/2026_Capstone)
+
+<br />
+
 
 <br />
 
@@ -125,8 +133,8 @@ Versioned inference artifacts:
 
 | Item | Details |
 |---|---|
-| Award | 우수논문상 (은상) |
 | Conference | 2026 한국정보기술학회 하계종합학술대회 · 대학생 논문경진대회 |
+| Award | 우수논문상 (은상) |
 | Research Area | Deep Learning · Medical AI |
 | Paper Title | 딥러닝 기반 흉부 X-ray 판독 보조 시스템: Grad-CAM을 활용한 설명가능한 의료영상 AI |
 | Authors | 박용민 **(First Author)**, 박지원, 송호성, 이용준, 하윤진, 손세연, 임현기 |
